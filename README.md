@@ -21,8 +21,8 @@ Arcanoid-like game with RPG elements.
 - [] Boss rules
 
 ## Buffs:
--[ ] double ball
--[] freball
+- [] double ball
+- [ ] freball
 - [] shadow clonning
 - [] sticky player tile
 - [] miniball
@@ -32,7 +32,7 @@ Arcanoid-like game with RPG elements.
 
 
 ## MENU:
--[ ] Play
-- Leaderboard
-- Description
-- Quit
+- [ ] Play
+- [ ] Leaderboard
+- [ ] Description
+- [ ] Quit
