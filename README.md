@@ -13,23 +13,22 @@ Arcanoid-like game with RPG elements.
 - ttf
 
 ## TODO:
-- [] Simple image movements
-- [] Collision and physics for ball
-- [] Tile distraction
-- [] Buffs in tiles
-- [] Boss fight
-- [] Boss rules
+- [ ] Simple image movements
+- [ ] Collision and physics for ball
+- [ ] Tile distraction
+- [ ] Buffs in tiles
+- [ ] Boss fight
+- [ ] Boss rules
 
 ## Buffs:
-- [] double ball
+- [ ] double ball
 - [ ] freball
-- [] shadow clonning
-- [] sticky player tile
-- [] miniball
-- [] slow ball
-- [] fast ball
-- [] extra life
-
+- [ ] shadow clonning
+- [ ] sticky player tile
+- [ ] miniball
+- [ ] slow ball
+- [ ] fast ball
+- [ ] extra life
 
 ## MENU:
 - [ ] Play
