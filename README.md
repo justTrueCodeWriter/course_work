@@ -1,7 +1,7 @@
-# Arcanoid-like game
+# Arkanoid-like game
 
 ## DESCRIPTION:
-Arcanoid-like game with RPG elements.
+Arkanoid-like game with RPG elements.
 
 ## TECH STACK:
 - C++
