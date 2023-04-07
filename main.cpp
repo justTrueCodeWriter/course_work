@@ -28,6 +28,8 @@ int main() {
 		SDL_RenderPresent(ren);	
 
 		SDL_Delay(16);
+
+		SDL_RenderClear(ren);
 			
 	}	
 
