@@ -11,25 +11,36 @@ int main() {
 
 	Init();	
 
-	while (usrTile.x++ <= 1000) {
+	SDL_PollEvent(&ev);
+	while (isRunning) {
 
-		SDL_PollEvent(&ev);
+		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+		SDL_RenderClear(ren);
 
+		while(SDL_PollEvent(&ev) != 0){
 		switch (ev.type) {
-			isRunning = false;
-			break;
-		}
-		
-		usr_tile_movements(ren, WIDTH, HEIGHT);			
+			case SDL_QUIT:
+				isRunning = false;
+				break;
 
-		usrTile.x++;
-		usrTile.y--;
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.scancode) {
+				case SDL_SCANCODE_RIGHT: usrTile.x += 10; break;
+				case SDL_SCANCODE_D: usrTile.x += 10; break;
+				case SDL_SCANCODE_LEFT: usrTile.x -= 10; break;
+				case SDL_SCANCODE_A: usrTile.x -= 10; break;
+				case SDL_SCANCODE_ESCAPE: isRunning = false; break;
+				//case SDL_SCANCODE_TAB: character_leveling();
+				}
+				break;
+			}
+		}	
+		usr_tile_movements(ren, WIDTH, HEIGHT);			
 
 		SDL_RenderPresent(ren);	
 
 		SDL_Delay(16);
 
-		SDL_RenderClear(ren);
 			
 	}	
 
