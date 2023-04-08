@@ -12,6 +12,8 @@ int main() {
 	Init();	
 
 	while (usrTile.x++ <= 1000) {
+		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+		SDL_RenderClear(ren);
 
 		SDL_PollEvent(&ev);
 
@@ -29,7 +31,6 @@ int main() {
 
 		SDL_Delay(16);
 
-		SDL_RenderClear(ren);
 			
 	}	
 
