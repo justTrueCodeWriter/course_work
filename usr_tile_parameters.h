@@ -1,8 +1,8 @@
 struct usr_tile_parameters {
 
-	float x=100, y=1070;
+	float x=100, y=800;
 
-	float width=100, height=40;
+	float width=150, height=20;
 
 	char usrTileBuffsId;
 

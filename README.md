@@ -13,7 +13,7 @@ Arkanoid-like game with RPG elements.
 - ttf
 
 ## TODO:
-- [ ] Simple image movements
+- [x] Simple movements
 - [ ] Collision and physics for ball
 - [ ] Tile distraction
 - [ ] Buffs in tiles
@@ -22,7 +22,7 @@ Arkanoid-like game with RPG elements.
 
 ## Buffs:
 - [ ] double ball
-- [ ] freball
+- [ ] fireball
 - [ ] shadow clonning
 - [ ] sticky player tile
 - [ ] miniball

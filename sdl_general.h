@@ -1,5 +1,5 @@
 #pragma once
-const int WIDTH = 1920, HEIGHT = 1080;
+const int WIDTH = 1080, HEIGHT = 1080;
 
 SDL_Window* win;
 SDL_Renderer* ren;
