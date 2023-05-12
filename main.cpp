@@ -2,9 +2,21 @@
 #include <SDL2/SDL.h>
 #include "sdl_general.h"
 #include "usr_tile_parameters.h"
+#include "ball_parameters.h"
 #include "keyboard_parameters.h"
 
+extern usr_tile_parameters UsrTile;
+extern ball_parameters Ball;
+
+bool checkTileCollision();
+
 int main() {
+
+	int lasttime = SDL_GetTicks();
+	int newtime;
+	int dt = 0;
+	int dx = 1, dy = -1;
+	float alpha=1;
 
 	bool isRunning = true;	
 
@@ -51,20 +63,84 @@ int main() {
 
 			}
 		}
-		if ((isKeyPressed[LEFT]||isKeyPressed[A]) && 
-				!(isKeyPressed[RIGHT]||isKeyPressed[D])) usrTile.x-=30;
-		if ((isKeyPressed[RIGHT]||isKeyPressed[D]) && 
-				!(isKeyPressed[LEFT]||isKeyPressed[A])) usrTile.x+=30;
 
-		usr_tile_movements(ren, WIDTH, HEIGHT);			
+		newtime = SDL_GetTicks();
+		dt = newtime-lasttime;
+		if (dt < 16) {
+			SDL_Delay(16-dt);
+			newtime = SDL_GetTicks();
+			dt = newtime - lasttime;
+		}
+		lasttime = newtime;
+		
+		if ((isKeyPressed[LEFT]||isKeyPressed[A]) && 
+				!(isKeyPressed[RIGHT]||isKeyPressed[D])) {
+			if (UsrTile.x > 0)
+				UsrTile.x-=1.5*dt;
+		}
+		if ((isKeyPressed[RIGHT]||isKeyPressed[D]) && 
+				!(isKeyPressed[LEFT]||isKeyPressed[A])) {
+			if (UsrTile.x < WIDTH-UsrTile.width)
+				UsrTile.x+=1.5*dt;
+		}
+		
+		Ball.x += Ball.speed*dt*dx;
+		Ball.y += Ball.speed*dt*dy;
+
+		if (Ball.x-Ball.radius<=0 || Ball.x+Ball.radius>=WIDTH)
+			dx = -dx;
+		if (Ball.y-Ball.radius<=0)
+			dy = -dy;
+
+		if (checkTileCollision() && dy > 0) {
+			dy = -dy;
+		}	
+
+		if (Ball.y>=HEIGHT)
+			isRunning=false;
+
+		usr_tile_movements(ren);			
+		ball_movements(ren);
 
 		SDL_RenderPresent(ren);	
 
-		SDL_Delay(16);
+		//SDL_Delay(16);
 
 			
 	}
 
 	DeInit();
 
+}
+
+bool checkTileCollision()
+{
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	leftA = UsrTile.x;
+	rightA = UsrTile.x + UsrTile.width;
+	topA = UsrTile.y;
+	bottomA = UsrTile.y + UsrTile.height;
+
+	leftB = Ball.x;
+	rightB = Ball.x + Ball.radius;
+	topB = Ball.y;
+	bottomB = Ball.y + Ball.radius;
+	if (bottomA <= topB) {
+		return false;
+	}
+	if (topA >= bottomB) {
+		return false;
+	}
+	if (rightA <= leftB) {
+		return false;
+	}
+	if (leftA >= rightB) {
+		return false;
+	}
+
+	return true;
 }

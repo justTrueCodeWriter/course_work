@@ -8,6 +8,5 @@ struct usr_tile_parameters {
 
 };
 
-extern usr_tile_parameters usrTile;
 
-void usr_tile_movements(SDL_Renderer* ren, int width, int height);
+void usr_tile_movements(SDL_Renderer* ren);
