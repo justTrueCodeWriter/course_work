@@ -2,13 +2,13 @@
 #include <SDL2/SDL.h>
 #include "sdl_general.h"
 #include "usr_tile_parameters.h"
+
+extern usr_tile_parameters UsrTile;
+
 #include "ball_parameters.h"
 #include "keyboard_parameters.h"
 
-extern usr_tile_parameters UsrTile;
 extern ball_parameters Ball;
-
-bool checkTileCollision();
 
 int main() {
 
@@ -84,23 +84,11 @@ int main() {
 				UsrTile.x+=1.5*dt;
 		}
 		
-		Ball.x += Ball.speed*dt*dx;
-		Ball.y += Ball.speed*dt*dy;
-
-		if (Ball.x-Ball.radius<=0 || Ball.x+Ball.radius>=WIDTH)
-			dx = -dx;
-		if (Ball.y-Ball.radius<=0)
-			dy = -dy;
-
-		if (checkTileCollision() && dy > 0) {
-			dy = -dy;
-		}	
-
 		if (Ball.y>=HEIGHT)
 			isRunning=false;
 
 		usr_tile_movements(ren);			
-		ball_movements(ren);
+		ball_movements(ren, UsrTile, dt, dx, dy, WIDTH);
 
 		SDL_RenderPresent(ren);	
 
@@ -111,36 +99,4 @@ int main() {
 
 	DeInit();
 
-}
-
-bool checkTileCollision()
-{
-	int leftA, leftB;
-	int rightA, rightB;
-	int topA, topB;
-	int bottomA, bottomB;
-
-	leftA = UsrTile.x;
-	rightA = UsrTile.x + UsrTile.width;
-	topA = UsrTile.y;
-	bottomA = UsrTile.y + UsrTile.height;
-
-	leftB = Ball.x;
-	rightB = Ball.x + Ball.radius;
-	topB = Ball.y;
-	bottomB = Ball.y + Ball.radius;
-	if (bottomA <= topB) {
-		return false;
-	}
-	if (topA >= bottomB) {
-		return false;
-	}
-	if (rightA <= leftB) {
-		return false;
-	}
-	if (leftA >= rightB) {
-		return false;
-	}
-
-	return true;
 }

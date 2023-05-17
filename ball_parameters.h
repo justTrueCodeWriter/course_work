@@ -7,4 +7,4 @@ struct ball_parameters {
 
 };
 
-void ball_movements(SDL_Renderer* ren);
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, int dt, int &dx, int &dy, int width);
