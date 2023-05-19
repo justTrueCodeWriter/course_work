@@ -5,10 +5,13 @@
 
 extern usr_tile_parameters UsrTile;
 
+#include "map_parameters.h"
 #include "ball_parameters.h"
 #include "keyboard_parameters.h"
 
 extern ball_parameters Ball;
+
+extern map_parameters Map; 
 
 int main() {
 
@@ -32,6 +35,8 @@ int main() {
 
 		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
 		SDL_RenderClear(ren);
+
+		draw_map(ren);
 
 		while(SDL_PollEvent(&ev) != 0){
 			switch (ev.type) {
@@ -87,14 +92,12 @@ int main() {
 		if (Ball.y>=HEIGHT)
 			isRunning=false;
 
+
 		usr_tile_movements(ren);			
-		ball_movements(ren, UsrTile, dt, dx, dy, WIDTH);
+		ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
 
 		SDL_RenderPresent(ren);	
 
-		//SDL_Delay(16);
-
-			
 	}
 
 	DeInit();
