@@ -6,7 +6,7 @@
 ball_parameters Ball;
 
 bool check_tile_collision(usr_tile_parameters& UsrTile);
-void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy);
+void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDelete);
 
 void draw_ball(SDL_Renderer* ren) {
 
@@ -45,8 +45,12 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	//		dy = -dy;
 	//		Map.rects[i].pop();
 
+	int rectToDelete=-1;
+	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
 
-	check_map_tiles_collision(Map.rects, dx, dy);
+	if (rectToDelete!=-1)
+		Map.rects[rectToDelete].x=-WIDTH;
+
 }
 
 bool check_tile_collision(usr_tile_parameters& UsrTile)
@@ -81,33 +85,31 @@ bool check_tile_collision(usr_tile_parameters& UsrTile)
 	return true;
 }
 
-void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy) {
+void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDelete) {
 
-	int leftA, leftB;
-	int rightA, rightB;
-	int topA, topB;
-	int bottomA, bottomB;
+	for (int i = 0; i < RECTS_SIZE; i++) {
 
-	for (int i = 0; i < 40; i++) {
-		leftA = rect[i].x;
-		rightA = rect[i].x + rect[i].w;
-		topA = rect[i].y;
-		bottomA = rect[i].y + rect[i].h;
-
-		
-		leftB = Ball.x;
-		rightB = Ball.x + Ball.radius;
-		topB = Ball.y;
-		bottomB = Ball.y + Ball.radius;
-
-		printf("%d=%d | %d=%d\n", leftA, leftB, topA, topB);
-
-		if (Ball.y<rect[i].y) {
-			dy = -dy;	
+		if ((Ball.y<=rect[i].y+rect[i].h)&&((Ball.x>=rect[i].x) && 
+					(Ball.x<=rect[i].x+rect[i].w))) {
+			dy = abs(dy);	
+			rectToDelete=i;	
+			return;
 		}
-		/*if (((rightB>leftA) || (leftB<rightA))) {
-			dx = -dx;	
+
+		if ((Ball.x <=rect[i].x+rect[i].w)&&((Ball.y>=rect[i].y) &&
+					(Ball.y<=rect[i].y+rect[i].h))) {
+			dx = abs(dx);
+			rectToDelete=i;	
+			return;
+		}
+
+		/*if ((Ball.x >=rect[i].x)&&((Ball.y>=rect[i].y) &&
+					(Ball.y<=rect[i].y+rect[i].h))) {
+			dx = abs(dx);
+			rectToDelete=i;	
+			return;
 		}*/
+		
 	}	
 
 }

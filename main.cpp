@@ -31,12 +31,13 @@ int main() {
 
 	bool isKeyPressed[] = {false, false, false, false};
 
+	draw_map(ren);
+
 	while (isRunning) {
 
 		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
 		SDL_RenderClear(ren);
 
-		draw_map(ren);
 
 		while(SDL_PollEvent(&ev) != 0){
 			switch (ev.type) {
@@ -95,6 +96,8 @@ int main() {
 
 		usr_tile_movements(ren);			
 		ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
+
+		level1(ren);
 
 		SDL_RenderPresent(ren);	
 
