@@ -10,6 +10,12 @@ void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDele
 
 void draw_ball(SDL_Renderer* ren) {
 
+
+	SDL_FRect rect={Ball.x, Ball.y, Ball.radius, Ball.radius};
+
+	SDL_RenderFillRectF(ren, &rect);
+
+	/*
 	for (int w = 0; w < Ball.radius * 2; w++)
 	{
 		for (int h = 0; h < Ball.radius * 2; h++)
@@ -21,7 +27,7 @@ void draw_ball(SDL_Renderer* ren) {
 				SDL_RenderDrawPoint(ren, Ball.x + dx, Ball.y + dy);
 			}
 		}
-	}
+	}*/
 
 }
 

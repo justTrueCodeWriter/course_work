@@ -3,7 +3,7 @@ struct ball_parameters {
 	float x=75, y=780;
 	int bonusCount = 1;
 	float speed = 0.5;
-	float radius = 10;
+	float radius = 30;
 
 };
 
