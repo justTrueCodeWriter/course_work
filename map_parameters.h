@@ -1,7 +1,7 @@
-#define RECTS_SIZE 40
+#define RECTS_SIZE 24
 
-#define RECTS_ROWS 4
-#define RECTS_COLS 5
+#define RECTS_ROWS 2 
+#define RECTS_COLS 7
 
 struct map_parameters {
 
@@ -13,6 +13,8 @@ struct map_parameters {
 
 void draw_map(SDL_Renderer* ren);
 
-void level1(SDL_Renderer* ren);
-void level2();
-void level3();
+void level1_map_mask(SDL_Renderer* ren);
+void level2_map_mask(SDL_Renderer* ren);
+void level3_map_mask(SDL_Renderer* ren);
+
+void level(SDL_Renderer* ren);

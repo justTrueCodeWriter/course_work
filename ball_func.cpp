@@ -54,8 +54,10 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	int rectToDelete=-1;
 	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
 
-	if (rectToDelete!=-1)
+	if (rectToDelete!=-1) {
 		Map.rects[rectToDelete].x=-WIDTH;
+		UsrTile.score+=UsrTile.multiplier+1;
+	}
 
 }
 
@@ -95,15 +97,15 @@ void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDele
 
 	for (int i = 0; i < RECTS_SIZE; i++) {
 
-		if ((Ball.y<=rect[i].y+rect[i].h)&&((Ball.x>=rect[i].x) && 
-					(Ball.x<=rect[i].x+rect[i].w))) {
+		if ((Ball.y<rect[i].y+rect[i].h)&&((Ball.x>rect[i].x) && 
+					(Ball.x<rect[i].x+rect[i].w))) {
 			dy = abs(dy);	
 			rectToDelete=i;	
 			return;
 		}
 
-		if ((Ball.x <=rect[i].x+rect[i].w)&&((Ball.y>=rect[i].y) &&
-					(Ball.y<=rect[i].y+rect[i].h))) {
+		if ((Ball.x < rect[i].x+rect[i].w)&&(Ball.x >rect[i].x)&&((Ball.y>rect[i].y) &&
+					(Ball.y<rect[i].y+rect[i].h))) {
 			dx = abs(dx);
 			rectToDelete=i;	
 			return;

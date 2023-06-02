@@ -15,6 +15,22 @@ extern map_parameters Map;
 
 int main() {
 
+	
+
+	Init();	
+
+	int choiceLevel;
+	bool isCorrectChoice = true;	
+	printf("Level: "); scanf("%d", &choiceLevel);
+	do {
+		switch (choiceLevel) {
+			case 1: level1_map_mask(ren); break;
+			case 2: level2_map_mask(ren); break;
+			case 3: level3_map_mask(ren); break;
+			default: printf("INCORRECT!"); isCorrectChoice = false;
+		}
+	}while(!isCorrectChoice);
+
 	int lasttime = SDL_GetTicks();
 	int newtime;
 	int dt = 0;
@@ -25,13 +41,12 @@ int main() {
 
 	SDL_Event ev;
 
-	Init();	
-
 	SDL_PollEvent(&ev);
 
 	bool isKeyPressed[] = {false, false, false, false};
 
-	draw_map(ren);
+	
+	//draw_map(ren);
 
 	while (isRunning) {
 
@@ -90,14 +105,16 @@ int main() {
 				UsrTile.x+=1.5*dt;
 		}
 		
-		if (Ball.y>=HEIGHT)
+		if (Ball.y>=HEIGHT) {
 			isRunning=false;
+			printf("SCORE: %d\n", UsrTile.score);
+		}
 
 
 		usr_tile_movements(ren);			
 		ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
 
-		level1(ren);
+		level(ren);
 
 		SDL_RenderPresent(ren);	
 

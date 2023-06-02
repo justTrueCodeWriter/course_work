@@ -5,6 +5,10 @@ struct usr_tile_parameters {
 	float width=150, height=20;
 
 	char usrTileBuffsId;
+	
+	int score = 0;
+
+	int multiplier = 0;
 
 };
 
