@@ -1,6 +1,10 @@
 #include "stdio.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "sdl_general.h"
+
+#include "menu_parameters.h"
+
 #include "usr_tile_parameters.h"
 
 extern usr_tile_parameters UsrTile;
@@ -18,7 +22,9 @@ int main() {
 	
 
 	Init();	
-
+	printf("CORRECT");
+	start_menu(ren);	
+	printf("CORRECT");
 	int choiceLevel;
 	bool isCorrectChoice = true;	
 	printf("Level: "); scanf("%d", &choiceLevel);
