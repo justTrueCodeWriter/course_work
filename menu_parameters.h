@@ -7,6 +7,5 @@ void start_menu(SDL_Renderer* ren);
 
 void level_menu(SDL_Renderer* ren);
 void custom_level();
-void about(SDL_Renderer* ren);
 
 void escape_menu(SDL_Renderer* ren);

@@ -22,17 +22,17 @@ int main() {
 	
 
 	Init();	
-	printf("CORRECT");
 	start_menu(ren);	
-	printf("CORRECT");
 	int choiceLevel;
-	bool isCorrectChoice = true;	
-	printf("Level: "); scanf("%d", &choiceLevel);
+	bool isCorrectChoice;	
 	do {
+		isCorrectChoice = true;
+		printf("Level: "); scanf("%d", &choiceLevel);
 		switch (choiceLevel) {
 			case 1: level1_map_mask(ren); break;
 			case 2: level2_map_mask(ren); break;
 			case 3: level3_map_mask(ren); break;
+			case 4: exit(1); break;
 			default: printf("INCORRECT!"); isCorrectChoice = false;
 		}
 	}while(!isCorrectChoice);
