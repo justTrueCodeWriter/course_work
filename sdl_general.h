@@ -15,12 +15,12 @@ void DeInit() {
 
 void Init() {
 
-	SDL_Init(SDL_INIT_VIDEO) != 0;
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	TTF_Init()==0;
+	TTF_Init();
 
 	win = SDL_CreateWindow("Arkanoix", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	ren = SDL_CreateRenderer(win, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 }

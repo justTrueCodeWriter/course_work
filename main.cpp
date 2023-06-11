@@ -19,11 +19,10 @@ extern map_parameters Map;
 
 int main() {
 
-	
 
 	Init();	
 	start_menu(ren);	
-	int choiceLevel;
+	/*int choiceLevel;
 	bool isCorrectChoice;	
 	do {
 		isCorrectChoice = true;
@@ -35,7 +34,7 @@ int main() {
 			case 4: exit(1); break;
 			default: printf("INCORRECT!"); isCorrectChoice = false;
 		}
-	}while(!isCorrectChoice);
+	}while(!isCorrectChoice);*/
 
 	int lasttime = SDL_GetTicks();
 	int newtime;
@@ -85,8 +84,6 @@ int main() {
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
-
-				
 
 			}
 		}
