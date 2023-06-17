@@ -1,6 +1,9 @@
+#define DEFAULT_BALL_X 75
+#define DEFAULT_BALL_Y 780
+
 struct ball_parameters {
 
-	float x=75, y=780;
+	float x=DEFAULT_BALL_X, y=DEFAULT_BALL_Y;
 	int bonusCount = 1;
 	float speed = 0.5;
 	float radius = 30;

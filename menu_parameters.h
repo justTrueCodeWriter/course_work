@@ -8,4 +8,6 @@ void start_menu(SDL_Renderer* ren);
 int level_menu(SDL_Renderer* ren);
 void custom_level();
 
-void escape_menu(SDL_Renderer* ren);
+void game_cycle(SDL_Renderer* ren);
+
+int escape_menu(SDL_Renderer* ren);

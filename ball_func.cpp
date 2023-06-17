@@ -38,9 +38,9 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	Ball.x += Ball.speed*dt*dx;
 	Ball.y += Ball.speed*dt*dy;
 
-	if (Ball.x-Ball.radius<=0 || Ball.x+Ball.radius>=WIDTH)
+	if (Ball.x<=0 || Ball.x+Ball.radius>=WIDTH)
 		dx = -dx;
-	if (Ball.y-Ball.radius<=0)
+	if (Ball.y<=0)
 		dy = -dy;
 
 	if (check_tile_collision(UsrTile) && dy > 0) {

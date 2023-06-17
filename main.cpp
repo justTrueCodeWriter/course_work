@@ -19,22 +19,12 @@ extern map_parameters Map;
 
 int main() {
 
-
 	Init();	
-	start_menu(ren);	
-	/*int choiceLevel;
-	bool isCorrectChoice;	
-	do {
-		isCorrectChoice = true;
-		printf("Level: "); scanf("%d", &choiceLevel);
-		switch (choiceLevel) {
-			case 1: level1_map_mask(ren); break;
-			case 2: level2_map_mask(ren); break;
-			case 3: level3_map_mask(ren); break;
-			case 4: exit(1); break;
-			default: printf("INCORRECT!"); isCorrectChoice = false;
-		}
-	}while(!isCorrectChoice);*/
+	start_menu(ren);
+	DeInit();
+}
+
+void game_cycle(SDL_Renderer* ren) {
 
 	int lasttime = SDL_GetTicks();
 	int newtime;
@@ -71,7 +61,10 @@ int main() {
 					case SDL_SCANCODE_A: isKeyPressed[A]=true; break;
 					case SDL_SCANCODE_RIGHT: isKeyPressed[RIGHT]=true; break;
 					case SDL_SCANCODE_D: isKeyPressed[D]=true; break;
-					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
+					case SDL_SCANCODE_ESCAPE: { int tmpTime = dt;
+												escape_menu(ren); 
+												dt = tmpTime;
+											  }break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
@@ -111,6 +104,8 @@ int main() {
 		if (Ball.y>=HEIGHT) {
 			isRunning=false;
 			printf("SCORE: %d\n", UsrTile.score);
+			Ball.x = DEFAULT_BALL_X;
+			Ball.y = DEFAULT_BALL_Y;
 		}
 
 
@@ -123,6 +118,5 @@ int main() {
 
 	}
 
-	DeInit();
 
 }
