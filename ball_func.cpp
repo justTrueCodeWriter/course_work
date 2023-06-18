@@ -95,7 +95,7 @@ bool check_tile_collision(usr_tile_parameters& UsrTile)
 
 void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDelete) {
 
-	for (int i = 0; i < RECTS_SIZE; i++) {
+	for (int i = 0; i < RECTS_AMOUNT; i++) {
 
 		if ((Ball.y<rect[i].y+rect[i].h)&&((Ball.x>rect[i].x) && 
 					(Ball.x<rect[i].x+rect[i].w))) {

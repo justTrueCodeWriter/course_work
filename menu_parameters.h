@@ -6,7 +6,8 @@
 void start_menu(SDL_Renderer* ren);
 
 int level_menu(SDL_Renderer* ren);
-void custom_level();
+
+int custom_level_menu(SDL_Renderer* ren);
 
 void game_cycle(SDL_Renderer* ren);
 

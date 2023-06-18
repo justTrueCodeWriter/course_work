@@ -82,7 +82,7 @@ void start_menu(SDL_Renderer* ren) {
 		if (isEnter) {
 			switch (menuChoice) {
 				case 1: if(level_menu(ren)) {} break;
-				case 2: break;
+				case 2: custom_level_menu(ren); break; // TODO: custom_level function
 				case 3: system("xdg-open https://github.com/justTrueCodeWriter/course_work"); break;
 				case 4: exit(1); break;
 			}
@@ -187,6 +187,7 @@ int level_menu(SDL_Renderer* ren) {
 			SDL_DestroyTexture(buttonExitTexture);
 
 			TTF_CloseFont(font);
+			printf("choice = %d\n", menuChoice);
 			switch (menuChoice) {
 				case 1: level1_map_mask(ren); break;
 				case 2: level2_map_mask(ren); break;
@@ -211,6 +212,95 @@ int level_menu(SDL_Renderer* ren) {
 
 }
 
+int custom_level_menu(SDL_Renderer* ren) {
+
+	SDL_Event ev;
+
+	SDL_PollEvent(&ev);
+
+	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 70);
+	const char *menuPointer = "-->";
+	const char *buttonCreateLevel = "CREATE LEVEL";
+	const char *buttonStartCustomLevel = "START";
+	const char *buttonExit = "BACK";
+
+
+	SDL_Surface* menuPointerSurface = TTF_RenderText_Blended(font, menuPointer, {92, 137, 132});
+	SDL_Rect menuPointerRect = {130, 370, menuPointerSurface->w, menuPointerSurface->h};
+	SDL_Texture* menuPointerTexture = SDL_CreateTextureFromSurface(ren, menuPointerSurface);
+
+	SDL_Surface* buttonCreateLevelSurface = TTF_RenderText_Blended(font, buttonCreateLevel, {215, 192, 174});
+	SDL_Rect buttonCreateLevelRect = {230, 370, buttonCreateLevelSurface->w, buttonCreateLevelSurface->h};
+	SDL_Texture* buttonCreateLevelTexture = SDL_CreateTextureFromSurface(ren, buttonCreateLevelSurface);
+
+	SDL_Surface* buttonStartCustomLevelSurface = TTF_RenderText_Blended(font, buttonStartCustomLevel, {215, 192, 174});
+	SDL_Rect buttonStartCustomLevelRect = {350, 440, buttonStartCustomLevelSurface->w, buttonStartCustomLevelSurface->h};
+	SDL_Texture* buttonStartCustomLevelTexture = SDL_CreateTextureFromSurface(ren, buttonStartCustomLevelSurface);
+
+	SDL_Surface* buttonExitSurface = TTF_RenderText_Blended(font, buttonExit, {215, 192, 174});
+	SDL_Rect buttonExitRect = {350, 510, buttonExitSurface->w, buttonExitSurface->h};
+	SDL_Texture* buttonExitTexture = SDL_CreateTextureFromSurface(ren, buttonExitSurface);
+	
+	SDL_FreeSurface(menuPointerSurface);
+	SDL_FreeSurface(buttonCreateLevelSurface);
+	SDL_FreeSurface(buttonStartCustomLevelSurface);
+	SDL_FreeSurface(buttonExitSurface);
+
+	bool isRunning = true;	
+	int menuChoice = 1;
+	while (isRunning) {
+
+		bool isEnter = false;
+
+		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+		SDL_RenderClear(ren);
+		
+		while(SDL_PollEvent(&ev) != 0){
+			switch (ev.type) {
+				case SDL_QUIT:
+					isRunning = false;
+					break;
+
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_UP: if (menuPointerRect.y-70>=370) { menuPointerRect.y-=70; menuChoice--; } break;
+					case SDL_SCANCODE_W: if (menuPointerRect.y-70>=370) { menuPointerRect.y-=70; menuChoice--; } break;
+					case SDL_SCANCODE_DOWN: if (menuPointerRect.y+70<=510) { menuPointerRect.y+=70; menuChoice++; } break;
+					case SDL_SCANCODE_S: if (menuPointerRect.y+70<=510) { menuPointerRect.y+=70; menuChoice++; } break;
+					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
+					case SDL_SCANCODE_RETURN: isEnter = true; break;
+					//case SDL_SCANCODE_TAB: character_leveling();
+					}
+					break;
+			}
+		}	
+
+		if (isEnter) {
+			SDL_DestroyTexture(menuPointerTexture);
+			SDL_DestroyTexture(buttonCreateLevelTexture);
+			SDL_DestroyTexture(buttonStartCustomLevelTexture);
+			SDL_DestroyTexture(buttonExitTexture);
+
+			TTF_CloseFont(font);
+			switch (menuChoice) {
+				case 1: creat_custom_level(); break;
+				case 2: play_custom_level(ren); break;
+				case 3: return 0; break;
+			}
+			return 1;
+		}
+
+		SDL_RenderCopy(ren, menuPointerTexture, NULL, &menuPointerRect);
+		SDL_RenderCopy(ren, buttonCreateLevelTexture, NULL, &buttonCreateLevelRect);
+		SDL_RenderCopy(ren, buttonStartCustomLevelTexture, NULL, &buttonStartCustomLevelRect);
+		SDL_RenderCopy(ren, buttonExitTexture, NULL, &buttonExitRect);
+
+		SDL_RenderPresent(ren);	
+
+	}
+
+}
+
 int escape_menu(SDL_Renderer* ren) {
 
 	SDL_Event ev;
@@ -224,7 +314,7 @@ int escape_menu(SDL_Renderer* ren) {
 
 
 	SDL_Surface* menuPointerSurface = TTF_RenderText_Blended(font, menuPointer, {92, 137, 132});
-	SDL_Rect menuPointerRect = {200, 370, menuPointerSurface->w, menuPointerSurface->h};
+	SDL_Rect menuPointerRect = {200, 440, menuPointerSurface->w, menuPointerSurface->h};
 	SDL_Texture* menuPointerTexture = SDL_CreateTextureFromSurface(ren, menuPointerSurface);
 
 	SDL_Surface* buttonResumeSurface = TTF_RenderText_Blended(font, buttonResume, {215, 192, 174});
@@ -258,8 +348,8 @@ int escape_menu(SDL_Renderer* ren) {
 					switch (ev.key.keysym.scancode) {
 					case SDL_SCANCODE_UP: if (menuPointerRect.y-70>=370) { menuPointerRect.y-=70; menuChoice--; } break;
 					case SDL_SCANCODE_W: if (menuPointerRect.y-70>=370) { menuPointerRect.y-=70; menuChoice--; } break;
-					case SDL_SCANCODE_DOWN: if (menuPointerRect.y+70<=580) { menuPointerRect.y+=70; menuChoice++; } break;
-					case SDL_SCANCODE_S: if (menuPointerRect.y+70<=580) { menuPointerRect.y+=70; menuChoice++; } break;
+					case SDL_SCANCODE_DOWN: if (menuPointerRect.y+70<=510) { menuPointerRect.y+=70; menuChoice++; } break;
+					case SDL_SCANCODE_S: if (menuPointerRect.y+70<=510) { menuPointerRect.y+=70; menuChoice++; } break;
 					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
 					case SDL_SCANCODE_RETURN: isEnter = true; break;
 					//case SDL_SCANCODE_TAB: character_leveling();

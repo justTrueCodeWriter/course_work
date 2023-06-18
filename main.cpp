@@ -15,7 +15,7 @@ extern usr_tile_parameters UsrTile;
 
 extern ball_parameters Ball;
 
-extern map_parameters Map; 
+map_parameters Map; 
 
 int main() {
 
@@ -61,10 +61,7 @@ void game_cycle(SDL_Renderer* ren) {
 					case SDL_SCANCODE_A: isKeyPressed[A]=true; break;
 					case SDL_SCANCODE_RIGHT: isKeyPressed[RIGHT]=true; break;
 					case SDL_SCANCODE_D: isKeyPressed[D]=true; break;
-					case SDL_SCANCODE_ESCAPE: { int tmpTime = dt;
-												escape_menu(ren); 
-												dt = tmpTime;
-											  }break;
+					case SDL_SCANCODE_ESCAPE: if (!escape_menu(ren)) return; break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
@@ -83,11 +80,11 @@ void game_cycle(SDL_Renderer* ren) {
 
 		newtime = SDL_GetTicks();
 		dt = newtime-lasttime;
-		if (dt < 16) {
+		/*if (dt < 16) {
 			SDL_Delay(16-dt);
 			newtime = SDL_GetTicks();
 			dt = newtime - lasttime;
-		}
+		}*/
 		lasttime = newtime;
 		
 		if ((isKeyPressed[LEFT]||isKeyPressed[A]) && 
@@ -117,6 +114,5 @@ void game_cycle(SDL_Renderer* ren) {
 		SDL_RenderPresent(ren);	
 
 	}
-
 
 }
