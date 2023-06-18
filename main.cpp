@@ -32,6 +32,7 @@ void game_cycle(SDL_Renderer* ren) {
 	int dx = 1, dy = -1;
 	float alpha=1;
 
+	bool isBallMove = true;
 	bool isRunning = true;	
 
 	SDL_Event ev;
@@ -61,7 +62,7 @@ void game_cycle(SDL_Renderer* ren) {
 					case SDL_SCANCODE_A: isKeyPressed[A]=true; break;
 					case SDL_SCANCODE_RIGHT: isKeyPressed[RIGHT]=true; break;
 					case SDL_SCANCODE_D: isKeyPressed[D]=true; break;
-					case SDL_SCANCODE_ESCAPE: if (!escape_menu(ren)) return; break;
+					case SDL_SCANCODE_ESCAPE: if (!escape_menu(ren)) return; isBallMove = false; break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
@@ -106,12 +107,15 @@ void game_cycle(SDL_Renderer* ren) {
 		}
 
 
-		usr_tile_movements(ren);			
-		ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
+		usr_tile_movements(ren);		
+		if (isBallMove)
+			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
 
 		level(ren);
 
 		SDL_RenderPresent(ren);	
+
+		isBallMove = true;
 
 	}
 
