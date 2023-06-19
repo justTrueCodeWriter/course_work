@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <string.h>
 
 #include "menu_parameters.h"
 #include "map_parameters.h"
@@ -152,6 +153,7 @@ int level_menu(SDL_Renderer* ren) {
 
 	bool isRunning = true;	
 	int menuChoice = 1;
+	int colorMaskLink=0;
 	while (isRunning) {
 
 		bool isEnter = false;
@@ -189,13 +191,12 @@ int level_menu(SDL_Renderer* ren) {
 			TTF_CloseFont(font);
 			printf("choice = %d\n", menuChoice);
 			switch (menuChoice) {
-				case 1: level1_map_mask(ren); break;
-				case 2: level2_map_mask(ren); break;
-				case 3: level3_map_mask(ren); break;
+				case 1: level1_map_mask(ren, colorMaskLink); break;
+				case 2: level2_map_mask(ren, colorMaskLink); break;
+				case 3: level3_map_mask(ren, colorMaskLink); break;
 				case 4: return 0; break;
 			}
-			game_cycle(ren);
-			printf("Game correct\n");
+			game_cycle(ren, colorMaskLink);
 			return 1;
 		}
 
@@ -379,5 +380,62 @@ int escape_menu(SDL_Renderer* ren) {
 	}
 
 	
+
+}
+
+void score_screen(SDL_Renderer* ren, int score) {
+
+	SDL_Event ev;
+
+	SDL_PollEvent(&ev);
+
+	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 70);
+	char scoreTitle[30] = "SCORE: ";
+	char stringScore[23];
+	sprintf(stringScore, "%d", score);
+	strcat(scoreTitle, stringScore);
+
+	SDL_Surface* scoreTitleSurface = TTF_RenderText_Blended(font, scoreTitle, {215, 192, 174});
+	SDL_Rect scoreTitleRect = {300, 440, scoreTitleSurface->w, scoreTitleSurface->h};
+	SDL_Texture* scoreTitleTexture = SDL_CreateTextureFromSurface(ren, scoreTitleSurface);
+
+	SDL_FreeSurface(scoreTitleSurface);
+
+	bool isRunning = true;	
+	int menuChoice = 1;
+	while (isRunning) {
+
+		bool isEnter = false;
+
+		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+		SDL_RenderClear(ren);
+		
+		while(SDL_PollEvent(&ev) != 0){
+			switch (ev.type) {
+				case SDL_QUIT:
+					isRunning = false;
+					break;
+
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
+					case SDL_SCANCODE_RETURN: isEnter = true; break;
+					//case SDL_SCANCODE_TAB: character_leveling();
+					}
+					break;
+			}
+		}	
+
+		if (isEnter) {
+			SDL_DestroyTexture(scoreTitleTexture);
+			TTF_CloseFont(font);
+			return;
+		}
+
+		SDL_RenderCopy(ren, scoreTitleTexture, NULL, &scoreTitleRect);
+
+		SDL_RenderPresent(ren);	
+
+	}
 
 }

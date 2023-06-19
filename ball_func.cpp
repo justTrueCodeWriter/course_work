@@ -6,7 +6,7 @@
 ball_parameters Ball;
 
 bool check_tile_collision(usr_tile_parameters& UsrTile);
-void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDelete);
+void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx, float &dy, int &rectToDelete);
 
 void draw_ball(SDL_Renderer* ren) {
 
@@ -31,42 +31,46 @@ void draw_ball(SDL_Renderer* ren) {
 
 }
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, int &dx, int &dy, int WIDTH) {
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int *colorMaskLink, int dt, float &dx, float &dy, int WIDTH) {
 
 	draw_ball(ren);	
 
 	Ball.x += Ball.speed*dt*dx;
 	Ball.y += Ball.speed*dt*dy;
 
-	if (Ball.x<=0 || Ball.x+Ball.radius>=WIDTH)
-		dx = -dx;
-	if (Ball.y<=0)
-		dy = -dy;
+	if (Ball.x<0)
+		dx = abs(dx);
+	if(Ball.x+Ball.radius>WIDTH)
+		dx = -abs(dx);
+	if (Ball.y<0)
+		dy = abs(dy);
 
 	if (check_tile_collision(UsrTile) && dy > 0) {
 		dy = -dy;
 	}
 
-	// if(check_tile_collision(Map.rects[i]));
-	//		dy = -dy;
-	//		Map.rects[i].pop();
-
 	int rectToDelete=-1;
-	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
+	check_map_tiles_collision(Map.rects, Map.createdRectsCount, dx, dy, rectToDelete);
 
 	if (rectToDelete!=-1) {
-		Map.rects[rectToDelete].x=-WIDTH;
-		UsrTile.score+=UsrTile.multiplier+1;
+		printf("COLOR MASK: %d\n", colorMaskLink[rectToDelete]);
+		switch(colorMaskLink[rectToDelete]) {
+			case 1: Map.rects[rectToDelete].x=-WIDTH;
+					UsrTile.score+=UsrTile.multiplier+1;
+					break;
+			case 2: break;
+		}
+		
 	}
 
 }
 
 bool check_tile_collision(usr_tile_parameters& UsrTile)
 {
-	int leftA, leftB;
-	int rightA, rightB;
-	int topA, topB;
-	int bottomA, bottomB;
+	float leftA, leftB;
+	float rightA, rightB;
+	float topA, topB;
+	float bottomA, bottomB;
 
 	leftA = UsrTile.x;
 	rightA = UsrTile.x + UsrTile.width;
@@ -93,24 +97,41 @@ bool check_tile_collision(usr_tile_parameters& UsrTile)
 	return true;
 }
 
-void check_map_tiles_collision(SDL_Rect *rect, int &dx, int &dy, int &rectToDelete) {
+void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx, float &dy, int &rectToDelete) {
 
 	for (int i = 0; i < RECTS_AMOUNT; i++) {
 
-		if ((Ball.y<rect[i].y+rect[i].h)&&((Ball.x>rect[i].x) && 
-					(Ball.x<rect[i].x+rect[i].w))) {
+		if ((rect[i].y+rect[i].h>=Ball.y) && (rect[i].y+rect[i].h<=Ball.y+Ball.radius) &&
+				(Ball.x>=rect[i].x) && (Ball.x<=rect[i].x+rect[i].w)) {
 			dy = abs(dy);	
 			rectToDelete=i;	
+			createdRectsCount--;
 			return;
 		}
 
-		if ((Ball.x < rect[i].x+rect[i].w)&&(Ball.x >rect[i].x)&&((Ball.y>rect[i].y) &&
-					(Ball.y<rect[i].y+rect[i].h))) {
+		if ((rect[i].y>=Ball.y) && (rect[i].y<=Ball.y+Ball.radius) &&
+				(Ball.x>=rect[i].x) && (Ball.x<=rect[i].x+rect[i].w)) {
+			dy = -abs(dy);	
+			rectToDelete=i;	
+			createdRectsCount--;
+			return;
+		} 
+
+		if ((rect[i].x+rect[i].w>Ball.x) && (rect[i].x+rect[i].w<=Ball.x+Ball.radius) &&
+				(Ball.y>=rect[i].y) && (Ball.y<=rect[i].y+rect[i].h)) {
 			dx = abs(dx);
 			rectToDelete=i;	
+			createdRectsCount--;
 			return;
 		}
 
+		if ((rect[i].x>=Ball.x) && (rect[i].x<=Ball.x+Ball.radius) &&
+				(Ball.y>=rect[i].y) && (Ball.y<=rect[i].y+rect[i].h)) {
+			dx = -abs(dx);
+			rectToDelete=i;	
+			createdRectsCount--;
+			return;
+		}
 		/*if ((Ball.x >=rect[i].x)&&((Ball.y>=rect[i].y) &&
 					(Ball.y<=rect[i].y+rect[i].h))) {
 			dx = abs(dx);

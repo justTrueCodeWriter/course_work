@@ -1,6 +1,6 @@
 struct usr_tile_parameters {
 
-	float x=100, y=800;
+	float x=400, y=800;
 
 	float width=150, height=20;
 

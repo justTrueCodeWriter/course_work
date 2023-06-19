@@ -24,12 +24,12 @@ int main() {
 	DeInit();
 }
 
-void game_cycle(SDL_Renderer* ren) {
+void game_cycle(SDL_Renderer* ren, int *colorMaskLink) {
 
 	int lasttime = SDL_GetTicks();
 	int newtime;
 	int dt = 0;
-	int dx = 1, dy = -1;
+	float dx = 1, dy = -1;
 	float alpha=1;
 
 	bool isBallMove = true;
@@ -101,20 +101,35 @@ void game_cycle(SDL_Renderer* ren) {
 		
 		if (Ball.y>=HEIGHT) {
 			isRunning=false;
-			printf("SCORE: %d\n", UsrTile.score);
+			//printf("SCORE: %d\n", UsrTile.score);
+			score_screen(ren, UsrTile.score);
 			Ball.x = DEFAULT_BALL_X;
 			Ball.y = DEFAULT_BALL_Y;
+			UsrTile.x = 400;
+			UsrTile.y = 800;
+			UsrTile.score = 0;
+			colorMaskLink = nullptr;
 		}
 
 
 		usr_tile_movements(ren);		
+		
 		if (isBallMove)
-			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
+			ball_movements(ren, UsrTile, Map, colorMaskLink, dt, dx, dy, WIDTH);
 
-		level(ren);
+		level(ren, colorMaskLink);
 
 		SDL_RenderPresent(ren);	
 
+		if (Map.createdRectsCount == 0) {
+			isRunning = false;
+			Ball.x = DEFAULT_BALL_X;
+			Ball.y = DEFAULT_BALL_Y;
+			UsrTile.x = 400;
+			UsrTile.y = 800;
+			colorMaskLink = nullptr;
+			score_screen(ren, UsrTile.score);
+		}
 		isBallMove = true;
 
 	}
