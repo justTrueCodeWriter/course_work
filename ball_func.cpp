@@ -6,7 +6,7 @@
 ball_parameters Ball;
 
 bool check_tile_collision(usr_tile_parameters& UsrTile);
-void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx, float &dy, int &rectToDelete);
+void check_map_tiles_collision(SDL_Rect *rect, float &dx, float &dy, int &rectToDelete);
 
 void draw_ball(SDL_Renderer* ren) {
 
@@ -31,7 +31,7 @@ void draw_ball(SDL_Renderer* ren) {
 
 }
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int *colorMaskLink, int dt, float &dx, float &dy, int WIDTH) {
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int WIDTH) {
 
 	draw_ball(ren);	
 
@@ -50,15 +50,18 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	}
 
 	int rectToDelete=-1;
-	check_map_tiles_collision(Map.rects, Map.createdRectsCount, dx, dy, rectToDelete);
-
+	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
 	if (rectToDelete!=-1) {
-		printf("COLOR MASK: %d\n", colorMaskLink[rectToDelete]);
-		switch(colorMaskLink[rectToDelete]) {
+		switch(Map.colorMask[rectToDelete]) {
 			case 1: Map.rects[rectToDelete].x=-WIDTH;
 					UsrTile.score+=UsrTile.multiplier+1;
+					Map.createdRectsCount--;
 					break;
 			case 2: break;
+			case 3: Map.rects[rectToDelete].x=-WIDTH;
+					UsrTile.score+=UsrTile.multiplier+10;
+					Map.createdRectsCount--;
+					break;
 		}
 		
 	}
@@ -97,7 +100,7 @@ bool check_tile_collision(usr_tile_parameters& UsrTile)
 	return true;
 }
 
-void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx, float &dy, int &rectToDelete) {
+void check_map_tiles_collision(SDL_Rect *rect, float &dx, float &dy, int &rectToDelete) {
 
 	for (int i = 0; i < RECTS_AMOUNT; i++) {
 
@@ -105,7 +108,6 @@ void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx
 				(Ball.x>=rect[i].x) && (Ball.x<=rect[i].x+rect[i].w)) {
 			dy = abs(dy);	
 			rectToDelete=i;	
-			createdRectsCount--;
 			return;
 		}
 
@@ -113,15 +115,13 @@ void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx
 				(Ball.x>=rect[i].x) && (Ball.x<=rect[i].x+rect[i].w)) {
 			dy = -abs(dy);	
 			rectToDelete=i;	
-			createdRectsCount--;
 			return;
 		} 
 
-		if ((rect[i].x+rect[i].w>Ball.x) && (rect[i].x+rect[i].w<=Ball.x+Ball.radius) &&
+		if ((rect[i].x+rect[i].w>=Ball.x) && (rect[i].x+rect[i].w<=Ball.x+Ball.radius) &&
 				(Ball.y>=rect[i].y) && (Ball.y<=rect[i].y+rect[i].h)) {
 			dx = abs(dx);
 			rectToDelete=i;	
-			createdRectsCount--;
 			return;
 		}
 
@@ -129,7 +129,6 @@ void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx
 				(Ball.y>=rect[i].y) && (Ball.y<=rect[i].y+rect[i].h)) {
 			dx = -abs(dx);
 			rectToDelete=i;	
-			createdRectsCount--;
 			return;
 		}
 		/*if ((Ball.x >=rect[i].x)&&((Ball.y>=rect[i].y) &&
@@ -140,5 +139,6 @@ void check_map_tiles_collision(SDL_Rect *rect, int &createdRectsCount, float &dx
 		}*/
 		
 	}	
+
 
 }

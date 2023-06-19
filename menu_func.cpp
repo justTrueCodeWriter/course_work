@@ -83,7 +83,7 @@ void start_menu(SDL_Renderer* ren) {
 		if (isEnter) {
 			switch (menuChoice) {
 				case 1: if(level_menu(ren)) {} break;
-				case 2: custom_level_menu(ren); break; // TODO: custom_level function
+				case 2: custom_level_menu(ren); break; 
 				case 3: system("xdg-open https://github.com/justTrueCodeWriter/course_work"); break;
 				case 4: exit(1); break;
 			}
@@ -153,7 +153,6 @@ int level_menu(SDL_Renderer* ren) {
 
 	bool isRunning = true;	
 	int menuChoice = 1;
-	int colorMaskLink=0;
 	while (isRunning) {
 
 		bool isEnter = false;
@@ -189,14 +188,14 @@ int level_menu(SDL_Renderer* ren) {
 			SDL_DestroyTexture(buttonExitTexture);
 
 			TTF_CloseFont(font);
-			printf("choice = %d\n", menuChoice);
 			switch (menuChoice) {
-				case 1: level1_map_mask(ren, colorMaskLink); break;
-				case 2: level2_map_mask(ren, colorMaskLink); break;
-				case 3: level3_map_mask(ren, colorMaskLink); break;
+				case 1: level1_map_mask(ren); break;
+				case 2: level2_map_mask(ren); break;
+				case 3: level3_map_mask(ren); break;
 				case 4: return 0; break;
 			}
-			game_cycle(ren, colorMaskLink);
+			
+			game_cycle(ren);
 			return 1;
 		}
 
@@ -249,6 +248,7 @@ int custom_level_menu(SDL_Renderer* ren) {
 
 	bool isRunning = true;	
 	int menuChoice = 1;
+	int *colorMaskLink = nullptr;
 	while (isRunning) {
 
 		bool isEnter = false;

@@ -8,15 +8,17 @@ struct map_parameters {
 
 	SDL_Rect rects[RECTS_AMOUNT];
 
+	int colorMask[RECTS_AMOUNT];
+
 };
 
-void draw_map(SDL_Renderer* ren);
+void draw_map(SDL_Renderer* ren, int *colorMask);
 
-void level1_map_mask(SDL_Renderer* ren, int *&colorMaskLink);
-void level2_map_mask(SDL_Renderer* ren, int *&colorMaskLink);
-void level3_map_mask(SDL_Renderer* ren, int *colorMaskLink);
+void level1_map_mask(SDL_Renderer* ren);
+void level2_map_mask(SDL_Renderer* ren);
+void level3_map_mask(SDL_Renderer* ren);
 
 void creat_custom_level();
-void play_custom_level(SDL_Renderer* ren, int *colorMaskLink);
+void play_custom_level(SDL_Renderer* ren);
 
-void level(SDL_Renderer* ren, int *colorMaskLink);
+void level(SDL_Renderer* ren);

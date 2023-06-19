@@ -9,7 +9,7 @@ int level_menu(SDL_Renderer* ren);
 
 int custom_level_menu(SDL_Renderer* ren);
 
-void game_cycle(SDL_Renderer* ren, int *colorMaskLink);
+void game_cycle(SDL_Renderer* ren);
 void score_screen(SDL_Renderer* ren, int score);
 
 int escape_menu(SDL_Renderer* ren);

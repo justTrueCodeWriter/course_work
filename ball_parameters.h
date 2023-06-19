@@ -10,4 +10,4 @@ struct ball_parameters {
 
 };
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int *colorMaskLink, int dt, float &dx, float &dy, int width);
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int width);
