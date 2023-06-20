@@ -19,12 +19,14 @@ map_parameters Map;
 
 int main() {
 
+	create_necessary_files();
+
 	Init();	
 	start_menu(ren);
 	DeInit();
 }
 
-void game_cycle(SDL_Renderer* ren) {
+void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 	int lasttime = SDL_GetTicks();
 	int newtime;
@@ -126,7 +128,8 @@ void game_cycle(SDL_Renderer* ren) {
 			Ball.y = DEFAULT_BALL_Y;
 			UsrTile.x = 400;
 			UsrTile.y = 800;
-			score_screen(ren, UsrTile.score);
+			if (levelNumber != 0) save_level_progress(levelNumber);
+			if (levelNumber == 0) score_screen(ren, UsrTile.score);
 		}
 		isBallMove = true;
 

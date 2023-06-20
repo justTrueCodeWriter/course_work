@@ -14,11 +14,11 @@ struct map_parameters {
 
 void draw_map(SDL_Renderer* ren, int *colorMask);
 
-void level1_map_mask(SDL_Renderer* ren);
-void level2_map_mask(SDL_Renderer* ren);
-void level3_map_mask(SDL_Renderer* ren);
+int level1_map_mask(SDL_Renderer* ren);
+int level2_map_mask(SDL_Renderer* ren);
+int level3_map_mask(SDL_Renderer* ren);
 
-void creat_custom_level();
+void create_custom_level();
 void play_custom_level(SDL_Renderer* ren);
 
 void level(SDL_Renderer* ren);

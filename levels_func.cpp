@@ -25,8 +25,8 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask) {
 	for(int j = 0; j < RECTS_ROWS; j++) {
 		for (int i = 0; i < RECTS_COLS; i++) {
 			if (level[maskIndex] != 0) {
-				Map.rects[rectCount].x = 10+97*i;
-				Map.rects[rectCount].y = 10+32*j;
+				Map.rects[rectCount].x = 40+97*i;
+				Map.rects[rectCount].y = 60+32*j;
 				Map.rects[rectCount].w = 95;
 				Map.rects[rectCount].h = 30;
 				Map.colorMask[rectCount] = colorMask[rectCount];
@@ -43,7 +43,7 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask) {
 
 }
 
-void level1_map_mask(SDL_Renderer* ren) {
+int level1_map_mask(SDL_Renderer* ren) {
 
 	int level[RECTS_AMOUNT]{1, 1, 1, 1, 1, 1, 1, 1, 1,
 							1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -61,9 +61,11 @@ void level1_map_mask(SDL_Renderer* ren) {
 
 	draw_map(ren, level, colorMask);
 
+	return 1;
+
 }
 
-void level2_map_mask(SDL_Renderer* ren) {
+int level2_map_mask(SDL_Renderer* ren) {
 
 	int level[RECTS_AMOUNT]{0, 0, 0, 1, 1, 1, 0, 0, 0,
 							0, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -80,9 +82,11 @@ void level2_map_mask(SDL_Renderer* ren) {
 
 	draw_map(ren, level, colorMask);
 
+	return 2;
+
 }
 
-void level3_map_mask(SDL_Renderer* ren) {
+int level3_map_mask(SDL_Renderer* ren) {
 
 	int level[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 1,
 							0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -100,9 +104,11 @@ void level3_map_mask(SDL_Renderer* ren) {
 
 	draw_map(ren, level, colorMask);
 
+	return 3;
+
 }
 
-void creat_custom_level() {
+void create_custom_level() {
 
 	int level[RECTS_AMOUNT];
 	int colorMask[RECTS_AMOUNT];
@@ -169,7 +175,7 @@ void play_custom_level(SDL_Renderer *ren) {
 
 	draw_map(ren, level, colorMask);
 
-	game_cycle(ren);
+	game_cycle(ren, 0);
 
 }
 
