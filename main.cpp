@@ -29,7 +29,7 @@ int main() {
 void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 	int lasttime = SDL_GetTicks();
-	int newtime;
+	int newtime=0;
 	int dt = 0;
 	float dx = 1, dy = -1;
 	float alpha=1;
@@ -37,20 +37,38 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	bool isBallMove = true;
 	bool isRunning = true;	
 
+	char stringScore[23];
+	
+	char stringLevelTime[10];
+	float levelTime;
+
 	SDL_Event ev;
 
 	SDL_PollEvent(&ev);
 
 	bool isKeyPressed[] = {false, false, false, false};
 
-	
-	//draw_map(ren);
+	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 50);
 
 	while (isRunning) {
+		
+		levelTime = newtime/1000.0/60.0;
+		sprintf(stringLevelTime, "%.1f", levelTime);
+		SDL_Surface* stringLevelTimeSurface = TTF_RenderText_Blended(font, stringLevelTime, {215, 192, 174});
+		SDL_Rect stringLevelTimeRect = {470, -20, stringLevelTimeSurface->w, stringLevelTimeSurface->h};
+		SDL_Texture* stringLevelTimeTexture = SDL_CreateTextureFromSurface(ren, stringLevelTimeSurface);
+
+		SDL_FreeSurface(stringLevelTimeSurface);
 
 		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
 		SDL_RenderClear(ren);
 
+		sprintf(stringScore, "%d", UsrTile.score);
+		SDL_Surface* stringScoreSurface = TTF_RenderText_Blended(font, stringScore, {215, 192, 174});
+		SDL_Rect stringScoreRect = {1, -20, stringScoreSurface->w, stringScoreSurface->h};
+		SDL_Texture* stringScoreTexture = SDL_CreateTextureFromSurface(ren, stringScoreSurface);
+
+		SDL_FreeSurface(stringScoreSurface);
 
 		while(SDL_PollEvent(&ev) != 0){
 			switch (ev.type) {
@@ -83,11 +101,11 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 		newtime = SDL_GetTicks();
 		dt = newtime-lasttime;
-		/*if (dt < 16) {
+		if (dt < 16) {
 			SDL_Delay(16-dt);
 			newtime = SDL_GetTicks();
 			dt = newtime - lasttime;
-		}*/
+		}
 		lasttime = newtime;
 		
 		if ((isKeyPressed[LEFT]||isKeyPressed[A]) && 
@@ -110,6 +128,8 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			UsrTile.x = 400;
 			UsrTile.y = 800;
 			UsrTile.score = 0;
+			TTF_CloseFont(font);
+			save_level_progress(0);
 		}
 
 
@@ -119,6 +139,10 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
 
 		level(ren);
+
+
+		SDL_RenderCopy(ren, stringScoreTexture, NULL, &stringScoreRect);
+		SDL_RenderCopy(ren, stringLevelTimeTexture, NULL, &stringLevelTimeRect);
 
 		SDL_RenderPresent(ren);	
 
@@ -130,9 +154,11 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			UsrTile.y = 800;
 			if (levelNumber != 0) save_level_progress(levelNumber);
 			if (levelNumber == 0) score_screen(ren, UsrTile.score);
+			TTF_CloseFont(font);
 		}
 		isBallMove = true;
-
+		SDL_DestroyTexture(stringScoreTexture);
+		SDL_DestroyTexture(stringLevelTimeTexture);
 	}
 
 }
