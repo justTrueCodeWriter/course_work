@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include "map_parameters.h"
 #include "menu_parameters.h"
+#include "usr_tile_parameters.h"
 
 extern map_parameters Map;
 
@@ -79,7 +80,6 @@ int level2_map_mask(SDL_Renderer* ren) {
 								0, 0, 0, 1, 1, 1, 0, 0, 0,
 								0, 0, 0, 0, 1, 0, 0, 0, 0	
 								};
-
 	draw_map(ren, level, colorMask);
 
 	return 2;

@@ -231,9 +231,9 @@ int level_menu(SDL_Renderer* ren) {
 			TTF_CloseFont(font);
 			switch (menuChoice) {
 				case 0: return 0; break;
-				case 1: levelNumber = level1_map_mask(ren); break;
-				case 2: levelNumber = level2_map_mask(ren); break;
-				case 3: levelNumber = level3_map_mask(ren); break;
+				case 1: levelNumber = level1_map_mask(ren); level1_level_bonus(UsrTile); break;
+				case 2: levelNumber = level2_map_mask(ren); level2_level_bonus(UsrTile); break;
+				case 3: levelNumber = level3_map_mask(ren); level3_level_bonus(UsrTile); break;;
 			}
 			
 			game_cycle(ren, levelNumber);

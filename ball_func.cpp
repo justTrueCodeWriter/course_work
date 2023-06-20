@@ -31,12 +31,22 @@ void draw_ball(SDL_Renderer* ren) {
 
 }
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int WIDTH) {
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int WIDTH, bool isBallLaunched, bool &isFirstLaunch) {
 
 	draw_ball(ren);	
 
-	Ball.x += Ball.speed*dt*dx;
-	Ball.y += Ball.speed*dt*dy;
+	if (isBallLaunched) {
+		/*if (!isFirstLaunch) {
+			isFirstLaunch = false;
+		}*/
+		Ball.x += Ball.speed*dt*dx;
+		Ball.y += Ball.speed*dt*dy;
+
+	}
+	else {
+		Ball.x = UsrTile.x + 65;
+		Ball.y = DEFAULT_BALL_Y;
+	}
 
 	if (Ball.x<0)
 		dx = abs(dx);

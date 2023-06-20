@@ -34,8 +34,10 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	float dx = 1, dy = -1;
 	float alpha=1;
 
-	bool isBallMove = true;
+	bool isBallMove = false;
 	bool isRunning = true;	
+	bool isBallLaunched = false;
+	bool isFirstLaunch = true;
 
 	char stringScore[23];
 	
@@ -51,7 +53,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 50);
 
 	while (isRunning) {
-		
+	
 		levelTime = newtime/1000.0/60.0;
 		sprintf(stringLevelTime, "%.1f", levelTime);
 		SDL_Surface* stringLevelTimeSurface = TTF_RenderText_Blended(font, stringLevelTime, {215, 192, 174});
@@ -83,6 +85,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 					case SDL_SCANCODE_RIGHT: isKeyPressed[RIGHT]=true; break;
 					case SDL_SCANCODE_D: isKeyPressed[D]=true; break;
 					case SDL_SCANCODE_ESCAPE: if (!escape_menu(ren)) return; isBallMove = false; break;
+					case SDL_SCANCODE_RETURN: isBallLaunched = true; break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
@@ -118,7 +121,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			if (UsrTile.x < WIDTH-UsrTile.width)
 				UsrTile.x+=1.5*dt;
 		}
-		
+
 		if (Ball.y>=HEIGHT) {
 			isRunning=false;
 			//printf("SCORE: %d\n", UsrTile.score);
@@ -132,14 +135,12 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			save_level_progress(0);
 		}
 
-
 		usr_tile_movements(ren);		
 		
 		if (isBallMove)
-			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH);
+			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH, isBallLaunched, isFirstLaunch);
 
 		level(ren);
-
 
 		SDL_RenderCopy(ren, stringScoreTexture, NULL, &stringScoreRect);
 		SDL_RenderCopy(ren, stringLevelTimeTexture, NULL, &stringLevelTimeRect);

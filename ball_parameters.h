@@ -1,4 +1,4 @@
-#define DEFAULT_BALL_X 75
+#define DEFAULT_BALL_X 465
 #define DEFAULT_BALL_Y 780
 
 struct ball_parameters {
@@ -10,4 +10,4 @@ struct ball_parameters {
 
 };
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int width);
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int width, bool isBallLaunched, bool &isFirstLaunch);
