@@ -6,7 +6,7 @@
 
 extern map_parameters Map;
 
-void draw_map(SDL_Renderer* ren, int *level, int *colorMask) {
+void draw_map(SDL_Renderer* ren, int *level, int *colorMask, int *bonusMask) {
 
 	int rectCount = 0;
 	int maskIndex = 0;
@@ -17,6 +17,7 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask) {
 			Map.rects[rectCount].y = -30;
 			Map.createdRectsCount = 0;
 			Map.colorMask[rectCount] = 0;
+			Map.bonusMask[rectCount] = 0;
 			rectCount++;
 		}
 	}
@@ -31,6 +32,7 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask) {
 				Map.rects[rectCount].w = 95;
 				Map.rects[rectCount].h = 30;
 				Map.colorMask[rectCount] = colorMask[rectCount];
+				Map.bonusMask[rectCount] = bonusMask[rectCount];
 				if (colorMask[rectCount] != 2) {
 					Map.createdRectsCount++;
 				}
@@ -57,10 +59,17 @@ int level1_map_mask(SDL_Renderer* ren) {
 								1, 1, 1, 1, 1, 1, 1, 1, 1,
 								1, 1, 1, 1, 1, 1, 1, 1, 1,
 								1, 1, 1, 1, 1, 1, 1, 1, 1,
-								1, 1, 1, 1, 1, 1, 1, 1, 1	
+								1, 1, 1, 1, 2, 1, 1, 1, 1	
 								};
 
-	draw_map(ren, level, colorMask);
+	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 4, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 2, 0, 0, 0, 0, 0, 0, 0	
+								};
+
+	draw_map(ren, level, colorMask, bonusMask);
 
 	return 1;
 
@@ -80,7 +89,14 @@ int level2_map_mask(SDL_Renderer* ren) {
 								0, 0, 0, 1, 1, 1, 0, 0, 0,
 								0, 0, 0, 0, 1, 0, 0, 0, 0	
 								};
-	draw_map(ren, level, colorMask);
+
+	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 1, 0, 0, 0, 0	
+								};
+	draw_map(ren, level, colorMask, bonusMask);
 
 	return 2;
 
@@ -102,7 +118,14 @@ int level3_map_mask(SDL_Renderer* ren) {
 								0, 0, 0, 0, 1, 2, 2, 2, 2	
 								};
 
-	draw_map(ren, level, colorMask);
+	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0	
+								};
+
+	draw_map(ren, level, colorMask, bonusMask);
 
 	return 3;
 
@@ -161,6 +184,7 @@ void play_custom_level(SDL_Renderer *ren) {
 
 	int level[RECTS_AMOUNT];
 	int colorMask[RECTS_AMOUNT];
+	int bonusMask[RECTS_AMOUNT];
 
 	FILE *ft;
 	ft = fopen("custom_level.txt", "rt");
@@ -173,7 +197,7 @@ void play_custom_level(SDL_Renderer *ren) {
 		fscanf(ft, "%d", &colorMask[i]);	
 	}
 
-	draw_map(ren, level, colorMask);
+	draw_map(ren, level, colorMask, bonusMask);
 
 	game_cycle(ren, 0);
 

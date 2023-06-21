@@ -10,9 +10,11 @@ struct map_parameters {
 
 	int colorMask[RECTS_AMOUNT];
 
+	int bonusMask[RECTS_AMOUNT];
+
 };
 
-void draw_map(SDL_Renderer* ren, int *colorMask);
+void draw_map(SDL_Renderer* ren, int *colorMask, int *bonusMask);
 
 int level1_map_mask(SDL_Renderer* ren);
 int level2_map_mask(SDL_Renderer* ren);

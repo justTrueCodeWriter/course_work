@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "sdl_general.h"
 
 #include "menu_parameters.h"
@@ -17,6 +18,24 @@ extern ball_parameters Ball;
 
 map_parameters Map; 
 
+SDL_Texture *load_texture_from_file(int x, int y, const char *filename, SDL_Rect* rect) {
+
+	SDL_Surface *surface = IMG_Load(filename);
+	if (surface == NULL) {
+		printf("Couldn't load image %s!\n", filename);
+		DeInit();
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surface);
+	*rect = {x, y, surface->w, surface->h};
+	SDL_FreeSurface(surface);
+
+	return texture;
+
+}
+
+void showActivatedBonuses(SDL_Renderer* ren, bool *isTakedBonus);
+ 
 int main() {
 
 	create_necessary_files();
@@ -27,6 +46,12 @@ int main() {
 }
 
 void game_cycle(SDL_Renderer* ren, int levelNumber) {
+
+	SDL_Rect coreRect;
+	SDL_Rect fireballRect;
+	SDL_Rect doubleTileRect;
+	SDL_Rect resizeRect;
+	SDL_Rect magnetRect;
 
 	int lasttime = SDL_GetTicks();
 	int newtime=0;
@@ -42,20 +67,20 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	char stringScore[23];
 	
 	char stringLevelTime[10];
-	float levelTime;
+	int levelTime;
 
 	SDL_Event ev;
 
 	SDL_PollEvent(&ev);
 
 	bool isKeyPressed[] = {false, false, false, false};
+	bool isTakedBonus[] = {false, false, false, false, false};
 
 	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 50);
 
 	while (isRunning) {
 	
-		levelTime = newtime/1000.0/60.0;
-		sprintf(stringLevelTime, "%.1f", levelTime);
+		sprintf(stringLevelTime, "%02d:%02d", levelTime/1000/60, levelTime/1000%60);
 		SDL_Surface* stringLevelTimeSurface = TTF_RenderText_Blended(font, stringLevelTime, {215, 192, 174});
 		SDL_Rect stringLevelTimeRect = {470, -20, stringLevelTimeSurface->w, stringLevelTimeSurface->h};
 		SDL_Texture* stringLevelTimeTexture = SDL_CreateTextureFromSurface(ren, stringLevelTimeSurface);
@@ -130,6 +155,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			Ball.y = DEFAULT_BALL_Y;
 			UsrTile.x = 400;
 			UsrTile.y = 800;
+			UsrTile.width = 150; 
 			UsrTile.score = 0;
 			TTF_CloseFont(font);
 			save_level_progress(0);
@@ -137,8 +163,10 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 		usr_tile_movements(ren);		
 		
-		if (isBallMove)
-			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH, isBallLaunched, isFirstLaunch);
+		if (isBallMove) {
+			levelTime += dt;
+			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH, isBallLaunched, isFirstLaunch, isTakedBonus);
+		}
 
 		level(ren);
 
@@ -153,6 +181,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			Ball.y = DEFAULT_BALL_Y;
 			UsrTile.x = 400;
 			UsrTile.y = 800;
+			UsrTile.width = 150; 
 			if (levelNumber != 0) save_level_progress(levelNumber);
 			if (levelNumber == 0) score_screen(ren, UsrTile.score);
 			TTF_CloseFont(font);
@@ -161,5 +190,11 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_DestroyTexture(stringScoreTexture);
 		SDL_DestroyTexture(stringLevelTimeTexture);
 	}
+
+}
+
+void showActivatedBonuses(SDL_Renderer* ren, bool *isTakedBonus) {
+
+
 
 }
