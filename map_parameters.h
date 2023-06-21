@@ -2,6 +2,8 @@
 #define RECTS_COLS 9
 #define RECTS_AMOUNT 45
 
+#define BONUS_AMOUNT 5
+
 struct map_parameters {
 
 	int createdRectsCount=0;

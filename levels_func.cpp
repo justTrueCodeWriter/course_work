@@ -135,6 +135,7 @@ void create_custom_level() {
 
 	int level[RECTS_AMOUNT];
 	int colorMask[RECTS_AMOUNT];
+	int rows[5], cols[5], bonusType[5];
 
 	int maskCount = 0;
 	for (int j = 0; j < RECTS_ROWS; j++) {
@@ -156,8 +157,21 @@ void create_custom_level() {
 		}
 	}
 
+	printf("\nBONUS TYPE:\n\n");	
+
+	maskCount = 0;
+	for (int i = 0; i < 5; i++) {
+		printf("Bonus %d: ", i+1);
+		scanf("%d%d%d", &rows[i], &cols[i], &bonusType[i]);
+	}
+
 	FILE *ft;
 	ft = fopen("custom_level.txt", "wt");
+
+	maskCount = 0;
+	for (int i = 0; i < 5; i++) {
+		fprintf(ft, "%d %d %d", rows[i], cols[i], bonusType[i]);
+	}
 
 	maskCount = 0;
 	for (int j = 0; j < RECTS_ROWS; j++) {
@@ -184,10 +198,22 @@ void play_custom_level(SDL_Renderer *ren) {
 
 	int level[RECTS_AMOUNT];
 	int colorMask[RECTS_AMOUNT];
-	int bonusMask[RECTS_AMOUNT];
+	int rows[BONUS_AMOUNT], cols[BONUS_AMOUNT], bonusType[BONUS_AMOUNT];
+	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0	
+								};
 
 	FILE *ft;
 	ft = fopen("custom_level.txt", "rt");
+
+	for (int i = 0; i < BONUS_AMOUNT; i++) {
+		fscanf(ft, "%d%d%d", &rows[i], &cols[i], &bonusMask[i]);
+	}
+
+	//TODO: fill bonusMask
 
 	for (int i = 0; i < RECTS_AMOUNT; i++) {
 		fscanf(ft, "%d", &level[i]);	

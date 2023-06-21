@@ -420,8 +420,6 @@ int escape_menu(SDL_Renderer* ren) {
 
 	}
 
-	
-
 }
 
 void score_screen(SDL_Renderer* ren, int score) {
