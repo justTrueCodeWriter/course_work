@@ -64,9 +64,9 @@ int level1_map_mask(SDL_Renderer* ren) {
 
 	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
-								0, 0, 0, 0, 4, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
-								0, 2, 0, 0, 0, 0, 0, 0, 0	
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 1, 0, 0, 0, 0, 0, 5, 4	
 								};
 
 	draw_map(ren, level, colorMask, bonusMask);
