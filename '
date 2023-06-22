@@ -31,15 +31,12 @@ void draw_ball(SDL_Renderer* ren) {
 
 }
 
-void fireball_hit(usr_tile_parameters &UsrTile, map_parameters &Map, int rectToDelete, int WIDTH) {
+void fireball_hit(usr_tile_parameters &UsrTile, map_parameters &Map, int rectToDelete) {
 
 	if (rectToDelete <= RECTS_AMOUNT) {
-		for (int i = 1; i < 4; i++) {
-			if (Map.rects[rectToDelete+i].x != -WIDTH) {
-				Map.rects[rectToDelete+i].x = -WIDTH;
-				Map.createdRectsCount--;
-			}
-		}
+		for (int i = 0; i < 4; i++)
+			Map.rects[rectToDelete+i].x = -WIDTH;
+
 	}
 
 
@@ -99,7 +96,7 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 			case 1: Map.rects[rectToDelete].x=-WIDTH;
 					UsrTile.score+=UsrTile.multiplier+1;
 					Map.createdRectsCount--;
-					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete, WIDTH);
+					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete);
 					break;
 			case 2: if (isTakedBonus[CORE_BONUS]) {
 						Map.rects[rectToDelete].x=-WIDTH;
@@ -109,7 +106,7 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 			case 3: Map.rects[rectToDelete].x=-WIDTH;
 					UsrTile.score+=UsrTile.multiplier+10;
 					Map.createdRectsCount--;
-					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete, WIDTH);
+					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete);
 					break;
 		}
 

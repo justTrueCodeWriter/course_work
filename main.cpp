@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "sdl_general.h"
 
 #include "menu_parameters.h"
@@ -17,6 +18,40 @@ extern ball_parameters Ball;
 
 map_parameters Map; 
 
+SDL_Texture *load_texture_from_file(const char *filename, SDL_Rect* rect) {
+
+	SDL_Surface *surface = IMG_Load(filename);
+	if (surface == NULL) {
+		printf("Couldn't load image %s!\n", filename);
+		DeInit();
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surface);
+	*rect = {-100, 830, 80, 80};
+	SDL_FreeSurface(surface);
+
+	return texture;
+
+}
+
+SDL_Texture *load_ball_texture_from_file(const char *filename, SDL_Rect* rect, int x, int y) {
+
+	SDL_Surface *surface = IMG_Load(filename);
+	if (surface == NULL) {
+		printf("Couldn't load image %s!\n", filename);
+		DeInit();
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surface);
+	*rect = {x, y, 30, 30};
+	SDL_FreeSurface(surface);
+
+	return texture;
+
+}
+
+void showActivatedBonuses(bool *isTakedBonus, SDL_Rect **bonusImagesRects);
+ 
 int main() {
 
 	create_necessary_files();
@@ -27,6 +62,22 @@ int main() {
 }
 
 void game_cycle(SDL_Renderer* ren, int levelNumber) {
+
+	SDL_Rect coreRect;
+	SDL_Texture* coreTexture = load_texture_from_file("textures/core.png", &coreRect);
+	SDL_Rect fireballRect;
+	SDL_Texture* fireballTexture = load_texture_from_file("textures/fireball.png", &fireballRect);
+	SDL_Rect doubleTileRect;
+	SDL_Texture* doubleTileTexture = load_texture_from_file("textures/double_tile.png", &doubleTileRect);
+	SDL_Rect resizeTileRect;
+	SDL_Texture* resizeTileTexture = load_texture_from_file("textures/increase_tile_size.png", &resizeTileRect);
+	SDL_Rect magnetTileRect;
+	SDL_Texture* magnetTileTexture = load_texture_from_file("textures/magnet.png", &magnetTileRect);
+
+	SDL_Rect ballRect;
+	SDL_Texture* ballTexture = load_ball_texture_from_file("textures/ball.png", &ballRect, Ball.x-5, Ball.y-5);
+
+	SDL_Rect *bonusImagesRects[] = {&coreRect, &fireballRect, &doubleTileRect, &resizeTileRect, &magnetTileRect};
 
 	int lasttime = SDL_GetTicks();
 	int newtime=0;
@@ -42,20 +93,20 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	char stringScore[23];
 	
 	char stringLevelTime[10];
-	float levelTime;
+	int levelTime;
 
 	SDL_Event ev;
 
 	SDL_PollEvent(&ev);
 
 	bool isKeyPressed[] = {false, false, false, false};
+	bool isTakedBonus[] = {false, false, false, false, false};
 
 	TTF_Font* font = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 50);
 
 	while (isRunning) {
 	
-		levelTime = newtime/1000.0/60.0;
-		sprintf(stringLevelTime, "%.1f", levelTime);
+		sprintf(stringLevelTime, "%02d:%02d", levelTime/1000/60, levelTime/1000%60);
 		SDL_Surface* stringLevelTimeSurface = TTF_RenderText_Blended(font, stringLevelTime, {215, 192, 174});
 		SDL_Rect stringLevelTimeRect = {470, -20, stringLevelTimeSurface->w, stringLevelTimeSurface->h};
 		SDL_Texture* stringLevelTimeTexture = SDL_CreateTextureFromSurface(ren, stringLevelTimeSurface);
@@ -130,6 +181,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			Ball.y = DEFAULT_BALL_Y;
 			UsrTile.x = 400;
 			UsrTile.y = 800;
+			UsrTile.width = 150; 
 			UsrTile.score = 0;
 			TTF_CloseFont(font);
 			save_level_progress(0);
@@ -137,23 +189,41 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 		usr_tile_movements(ren);		
 		
-		if (isBallMove)
-			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH, isBallLaunched, isFirstLaunch);
+		if (isBallMove) {
+			levelTime += dt;
+			ballRect.x = Ball.x-5;
+			ballRect.y = Ball.y-5;
+			ball_movements(ren, UsrTile, Map, dt, dx, dy, WIDTH, isBallLaunched, isFirstLaunch, isTakedBonus);
+		}
+
+		showActivatedBonuses(isTakedBonus, bonusImagesRects);
 
 		level(ren);
 
 		SDL_RenderCopy(ren, stringScoreTexture, NULL, &stringScoreRect);
 		SDL_RenderCopy(ren, stringLevelTimeTexture, NULL, &stringLevelTimeRect);
 
+		SDL_RenderCopy(ren, coreTexture, NULL, &coreRect);
+		SDL_RenderCopy(ren, fireballTexture, NULL, &fireballRect);
+		SDL_RenderCopy(ren, doubleTileTexture, NULL, &doubleTileRect);
+		SDL_RenderCopy(ren, resizeTileTexture, NULL, &resizeTileRect);
+		SDL_RenderCopy(ren, magnetTileTexture, NULL, &magnetTileRect);
+
+		SDL_RenderCopy(ren, ballTexture, NULL, &ballRect);
+
 		SDL_RenderPresent(ren);	
 
-		if (Map.createdRectsCount == 0) {
+		if (Map.createdRectsCount <= 0) {
 			isRunning = false;
 			Ball.x = DEFAULT_BALL_X;
 			Ball.y = DEFAULT_BALL_Y;
 			UsrTile.x = 400;
 			UsrTile.y = 800;
-			if (levelNumber != 0) save_level_progress(levelNumber);
+			UsrTile.width = 150; 
+			if (levelNumber != 0) {
+				save_level_progress(levelNumber);
+				save_level_slot(levelNumber);
+			}
 			if (levelNumber == 0) score_screen(ren, UsrTile.score);
 			TTF_CloseFont(font);
 		}
@@ -161,5 +231,26 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_DestroyTexture(stringScoreTexture);
 		SDL_DestroyTexture(stringLevelTimeTexture);
 	}
+
+	SDL_DestroyTexture(coreTexture);
+	SDL_DestroyTexture(fireballTexture);
+	SDL_DestroyTexture(doubleTileTexture);
+	SDL_DestroyTexture(resizeTileTexture);
+	SDL_DestroyTexture(magnetTileTexture);
+
+	SDL_DestroyTexture(ballTexture);
+
+}
+
+void showActivatedBonuses(bool *isTakedBonus, SDL_Rect **bonusImagesRects) {
+
+	int activeCount = 0;
+	for (int i = 0; i < 5; i++) {
+		if (isTakedBonus[i]) {
+			bonusImagesRects[i]->x = 10;
+			bonusImagesRects[i]->x += activeCount*90;
+			activeCount++;
+		}
+	}	
 
 }

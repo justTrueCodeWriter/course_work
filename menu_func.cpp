@@ -122,6 +122,8 @@ void create_necessary_files() {
 	ft = fopen("custom_level.txt", "rt");
 	fclose(ft);
 
+	ft = fopen("level_slot.bin", "wb");
+	fclose(ft);
 }
 
 void save_level_progress(int levelNumber) {
@@ -134,13 +136,25 @@ void save_level_progress(int levelNumber) {
 
 }
 
-int check_level_progress() {
+void save_level_slot(int levelNumber) {
+
+	FILE *ft;
+
+	ft = fopen("level_slot.bin", "wb");
+	fwrite(&levelNumber, sizeof(int), 1, ft);
+	fclose(ft);
+
+}
+
+int check_level_progress(bool isSavedSlot) {
 
 	FILE *ft;	
 
 	int levelProgress = 0;
 
-	ft = fopen("level_progress.bin", "rb");
+	if (isSavedSlot)
+		ft = fopen("level_progress.bin", "rb");
+	else ft = fopen("level_slot.bin", "rb");
 	fread(&levelProgress, sizeof(int), 1, ft);
 	fclose(ft);
 
@@ -192,7 +206,7 @@ int level_menu(SDL_Renderer* ren) {
 
 	bool isRunning = true;	
 	int menuChoice = 1;
-	int levelProgress = check_level_progress();
+	int levelProgress = check_level_progress(false);
 	int levelNumber = 0;
 	while (isRunning) {
 
@@ -215,6 +229,7 @@ int level_menu(SDL_Renderer* ren) {
 					case SDL_SCANCODE_S: if ((menuPointerRect.y+70<=580)&&(menuChoice<=levelProgress)) { menuPointerRect.y+=70; menuChoice++; } break;
 					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
 					case SDL_SCANCODE_RETURN: isEnter = true; break;
+					case SDL_SCANCODE_L: levelProgress = check_level_progress(true); break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
@@ -233,7 +248,7 @@ int level_menu(SDL_Renderer* ren) {
 				case 0: return 0; break;
 				case 1: levelNumber = level1_map_mask(ren); break;
 				case 2: levelNumber = level2_map_mask(ren); break;
-				case 3: levelNumber = level3_map_mask(ren); break;;
+				case 3: levelNumber = level3_map_mask(ren); break;
 			}
 			
 			game_cycle(ren, levelNumber);
@@ -419,8 +434,6 @@ int escape_menu(SDL_Renderer* ren) {
 		SDL_RenderPresent(ren);	
 
 	}
-
-	
 
 }
 

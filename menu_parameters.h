@@ -8,6 +8,7 @@ void create_necessary_files();
 
 int level_menu(SDL_Renderer* ren);
 void save_level_progress(int levelNumber);
+void save_level_slot(int levelNumber);
 
 int custom_level_menu(SDL_Renderer* ren);
 
