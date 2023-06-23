@@ -34,7 +34,7 @@ void draw_ball(SDL_Renderer* ren) {
 void fireball_hit(usr_tile_parameters &UsrTile, map_parameters &Map, int rectToDelete, int WIDTH) {
 
 	if (rectToDelete <= RECTS_AMOUNT) {
-		for (int i = 1; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			if (Map.rects[rectToDelete+i].x != -WIDTH) {
 				Map.rects[rectToDelete+i].x = -WIDTH;
 				Map.createdRectsCount--;
@@ -48,16 +48,16 @@ void fireball_hit(usr_tile_parameters &UsrTile, map_parameters &Map, int rectToD
 void bonus_activate(usr_tile_parameters &UsrTile, map_parameters &Map, bool *isTakedBonus, int rectToDelete) {
 
 	switch (Map.bonusMask[rectToDelete]) {
-		case 1: isTakedBonus[CORE_BONUS] = true; break;
-		case 2: isTakedBonus[FIREBALL_BONUS] = true; break;
-		case 3: isTakedBonus[DOUBLE_TILE_BONUS] = true; break;
-		case 4: isTakedBonus[RESIZE_TILE_BONUS] = true; UsrTile.width = 300; break;
-		case 5: isTakedBonus[MAGNET_TILE_BONUS] = true; break;
+		case 1: isTakedBonus[CORE_BONUS] = true; Ball.core = 5; break;
+		case 2: isTakedBonus[FIREBALL_BONUS] = true; Ball.fireball = 5; break;
+		case 3: isTakedBonus[DOUBLE_TILE_BONUS] = true; UsrTile.doubleTile = 5; break;
+		case 4: isTakedBonus[RESIZE_TILE_BONUS] = true; UsrTile.width = 300.0; UsrTile.resizeTile = 5; break;
+		case 5: isTakedBonus[MAGNET_TILE_BONUS] = true; UsrTile.magnet = 5; break;
 	}
 
 }
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int WIDTH, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus) {
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int WIDTH, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus) {
 
 	draw_ball(ren);	
 
@@ -65,12 +65,17 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 		/*if (!isFirstLaunch) {
 			isFirstLaunch = false;
 		}*/
-		Ball.x += Ball.speed*dt*dx;
+		Ball.x += Ball.speed*dt*dx*abs(cos(alpha));
 		Ball.y += Ball.speed*dt*dy;
 
 	}
+	else if (isTakedBonus[MAGNET_TILE_BONUS] && !isBallLaunched) {
+		printf("%lf = %lf\n", Ball.x, Ball.xPositionOnTile);
+		Ball.x = UsrTile.x+Ball.xPositionOnTile;
+		Ball.y = DEFAULT_BALL_Y;
+	}
 	else {
-		Ball.x = UsrTile.x + 65;
+		Ball.x = UsrTile.x + UsrTile.width/2-Ball.radius/2;
 		Ball.y = DEFAULT_BALL_Y;
 	}
 
@@ -81,35 +86,57 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	if (Ball.y<0)
 		dy = abs(dy);
 
+
 	if (check_tile_collision(UsrTile) && isTakedBonus[MAGNET_TILE_BONUS]) {
+		if (isBallLaunched) Ball.xPositionOnTile = Ball.x-UsrTile.x;
 		isBallLaunched = false;
-		dx = 1;
+		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) {
+			dx = abs(dx); 
+			alpha = Ball.x-(UsrTile.x);
+		}
+		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
+			dx = -abs(dx);
+			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
+		}
 		dy = -abs(dy);
 	}
 		
 
 	else if (check_tile_collision(UsrTile) && dy > 0) {
+		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) { 
+			dx = abs(dx);
+			alpha = Ball.x-(UsrTile.x);
+		}
+		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
+			dx = -abs(dx);
+			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
+		}
 		dy = -abs(dy);
 	}
 
 	int rectToDelete=-1;
 	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
 	if (rectToDelete!=-1) {
+		printf("%d\n", Map.createdRectsCount);
 		switch(Map.colorMask[rectToDelete]) {
-			case 1: Map.rects[rectToDelete].x=-WIDTH;
-					UsrTile.score+=UsrTile.multiplier+1;
-					Map.createdRectsCount--;
+			case 1: UsrTile.score+=UsrTile.multiplier+1;
 					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete, WIDTH);
+					else {
+						Map.rects[rectToDelete].x=-WIDTH;
+						Map.createdRectsCount--;
+					}
 					break;
 			case 2: if (isTakedBonus[CORE_BONUS]) {
 						Map.rects[rectToDelete].x=-WIDTH;
 						UsrTile.score+=UsrTile.multiplier+5;
 					}
 					break;
-			case 3: Map.rects[rectToDelete].x=-WIDTH;
-					UsrTile.score+=UsrTile.multiplier+10;
-					Map.createdRectsCount--;
+			case 3: UsrTile.score+=UsrTile.multiplier+10;
 					if (isTakedBonus[FIREBALL_BONUS]) fireball_hit(UsrTile, Map, rectToDelete, WIDTH);
+					else {
+						Map.rects[rectToDelete].x=-WIDTH;
+						Map.createdRectsCount--;
+					}
 					break;
 		}
 
@@ -169,7 +196,7 @@ void check_map_tiles_collision(SDL_Rect *rect, float &dx, float &dy, int &rectTo
 			return;
 		} 
 
-		if ((rect[i].x+rect[i].w>=Ball.x) && (rect[i].x+rect[i].w<=Ball.x+Ball.radius) &&
+		if ((rect[i].x+rect[i].w>Ball.x) && (rect[i].x+rect[i].w<Ball.x+Ball.radius) &&
 				(Ball.y>=rect[i].y) && (Ball.y<=rect[i].y+rect[i].h)) {
 			dx = abs(dx);
 			rectToDelete=i;	

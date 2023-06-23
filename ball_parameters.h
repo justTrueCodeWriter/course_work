@@ -10,10 +10,13 @@
 struct ball_parameters {
 
 	float x=DEFAULT_BALL_X, y=DEFAULT_BALL_Y;
+	float xPositionOnTile;
 	int bonusCount = 1;
 	float speed = 0.5;
-	float radius = 20;
+	float radius = 20.0;
+
+	int core, fireball;
 
 };
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, int width, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus);
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int width, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus);

@@ -229,7 +229,7 @@ int level_menu(SDL_Renderer* ren) {
 					case SDL_SCANCODE_S: if ((menuPointerRect.y+70<=580)&&(menuChoice<=levelProgress)) { menuPointerRect.y+=70; menuChoice++; } break;
 					case SDL_SCANCODE_ESCAPE: isRunning = false; break;
 					case SDL_SCANCODE_RETURN: isEnter = true; break;
-					case SDL_SCANCODE_L: levelProgress = check_level_progress(true); break;
+					case SDL_SCANCODE_L: levelProgress = check_level_progress(true)+1; break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;

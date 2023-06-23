@@ -43,6 +43,8 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask, int *bonusMask) {
 		
 	}
 
+	printf("Created rects: %d\n", Map.createdRectsCount);
+
 
 }
 
@@ -66,7 +68,7 @@ int level1_map_mask(SDL_Renderer* ren) {
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
-								0, 1, 0, 2, 0, 0, 0, 0, 4	
+								0, 1, 0, 0, 0, 2, 0, 0, 4	
 								};
 
 	draw_map(ren, level, colorMask, bonusMask);
