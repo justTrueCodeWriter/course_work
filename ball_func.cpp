@@ -62,7 +62,6 @@ void bonusTimeDecrease(bool *isTakedBonus, usr_tile_parameters& UsrTile) {
 	if (isTakedBonus[FIREBALL_BONUS]) Ball.fireball--;
 	if (isTakedBonus[DOUBLE_TILE_BONUS]) UsrTile.doubleTile--;
 	if (isTakedBonus[RESIZE_TILE_BONUS]) UsrTile.resizeTile--;
-	if (isTakedBonus[MAGNET_TILE_BONUS]) UsrTile.magnet--;
 
 }
 

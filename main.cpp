@@ -149,7 +149,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 		sprintf(magnetBonus, "%d", UsrTile.magnet);
 		SDL_Surface* magnetBonusSurface = TTF_RenderText_Blended(bonusFont, magnetBonus, {215, 192, 174});
-		SDL_Rect magnetBonusRect = {-50, 880, magnetBonusSurface->w, magnetBonusSurface->h};
+		SDL_Rect magnetBonusRect = {-50, 890, magnetBonusSurface->w, magnetBonusSurface->h};
 		SDL_Texture* magnetBonusTexture = SDL_CreateTextureFromSurface(ren, magnetBonusSurface);
 
 		SDL_FreeSurface(fireballBonusSurface);
@@ -157,7 +157,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_FreeSurface(resizeTileBonusSurface);
 		SDL_FreeSurface(magnetBonusSurface);
 
-		SDL_Rect *bonusTimes[] = {&fireballRect, &doubleTileBonusRect, &resizeTileBonusRect, &magnetBonusRect};
+		SDL_Rect *bonusTimes[] = {&fireballBonusRect, &doubleTileBonusRect, &resizeTileBonusRect, &magnetBonusRect};
 
 		while(SDL_PollEvent(&ev) != 0){
 			switch (ev.type) {
@@ -172,7 +172,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 					case SDL_SCANCODE_RIGHT: isKeyPressed[RIGHT]=true; break;
 					case SDL_SCANCODE_D: isKeyPressed[D]=true; break;
 					case SDL_SCANCODE_ESCAPE: if (!escape_menu(ren)) return; isBallMove = false; break;
-					case SDL_SCANCODE_RETURN: isBallLaunched = true; break;
+					case SDL_SCANCODE_RETURN: isBallLaunched = true; if (isTakedBonus[MAGNET_TILE_BONUS]) UsrTile.magnet--; break;
 					//case SDL_SCANCODE_TAB: character_leveling();
 					}
 					break;
