@@ -13,10 +13,12 @@ struct ball_parameters {
 	float xPositionOnTile;
 	int bonusCount = 1;
 	float speed = 0.5;
-	float radius = 20.0;
+	float radius = 22.0;
 
-	int core, fireball;
+	int core, fireball = 5;
 
 };
+
+void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile);
 
 void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int width, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus);

@@ -65,7 +65,7 @@ int main() {
 void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 	TTF_Font* bonusFont = TTF_OpenFont("fonts/CherryBombOne-Regular.ttf", 30);
-	char firballBonus[2];
+	char fireballBonus[2];
 	char doubleTileBonus[2];
 	char resizeTileBonus[2];
 	char magnetBonus[2];
@@ -102,6 +102,8 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 	char stringLevelTime[10];
 	int levelTime;
 
+	UsrTile.width = 150;
+
 	SDL_Event ev;
 
 	SDL_PollEvent(&ev);
@@ -130,10 +132,10 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 		SDL_FreeSurface(stringScoreSurface);
 
-		sprintf(firballBonus, "%d", Ball.fireball);
-		SDL_Surface* firballBonusSurface = TTF_RenderText_Blended(bonusFont, firballBonus, {215, 192, 174});
-		SDL_Rect firballBonusRect = {-50, 880, firballBonusSurface->w, firballBonusSurface->h};
-		SDL_Texture* firballBonusTexture = SDL_CreateTextureFromSurface(ren, firballBonusSurface);
+		sprintf(fireballBonus, "%d", Ball.fireball);
+		SDL_Surface* fireballBonusSurface = TTF_RenderText_Blended(bonusFont, fireballBonus, {215, 192, 174});
+		SDL_Rect fireballBonusRect = {-50, 880, fireballBonusSurface->w, fireballBonusSurface->h};
+		SDL_Texture* fireballBonusTexture = SDL_CreateTextureFromSurface(ren, fireballBonusSurface);
 
 		sprintf(doubleTileBonus, "%d", UsrTile.doubleTile);
 		SDL_Surface* doubleTileBonusSurface = TTF_RenderText_Blended(bonusFont, doubleTileBonus, {215, 192, 174});
@@ -150,7 +152,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_Rect magnetBonusRect = {-50, 880, magnetBonusSurface->w, magnetBonusSurface->h};
 		SDL_Texture* magnetBonusTexture = SDL_CreateTextureFromSurface(ren, magnetBonusSurface);
 
-		SDL_FreeSurface(firballBonusSurface);
+		SDL_FreeSurface(fireballBonusSurface);
 		SDL_FreeSurface(doubleTileBonusSurface);
 		SDL_FreeSurface(resizeTileBonusSurface);
 		SDL_FreeSurface(magnetBonusSurface);
@@ -225,11 +227,12 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		
 		if (isBallMove) {
 			levelTime += dt;
-			ballRect.x = Ball.x-5;
-			ballRect.y = Ball.y-5;
+			ballRect.x = Ball.x-4;
+			ballRect.y = Ball.y-4;
 			ball_movements(ren, UsrTile, Map, dt, dx, dy, alpha, WIDTH, isBallLaunched, isFirstLaunch, isTakedBonus);
 		}
 
+		checkBonusDeactivate(isTakedBonus, UsrTile);
 		showActivatedBonuses(isTakedBonus, bonusImagesRects, bonusTimes);
 
 		level(ren);
@@ -237,7 +240,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_RenderCopy(ren, stringScoreTexture, NULL, &stringScoreRect);
 		SDL_RenderCopy(ren, stringLevelTimeTexture, NULL, &stringLevelTimeRect);
 
-		SDL_RenderCopy(ren, firballBonusTexture, NULL, &firballBonusRect);
+		SDL_RenderCopy(ren, fireballBonusTexture, NULL, &fireballBonusRect);
 		SDL_RenderCopy(ren, doubleTileBonusTexture, NULL, &doubleTileBonusRect);
 		SDL_RenderCopy(ren, resizeTileBonusTexture, NULL, &resizeTileBonusRect);
 		SDL_RenderCopy(ren, magnetBonusTexture, NULL, &magnetBonusRect);
@@ -270,7 +273,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_DestroyTexture(stringScoreTexture);
 		SDL_DestroyTexture(stringLevelTimeTexture);
 
-		SDL_DestroyTexture(fireballTexture);
+		SDL_DestroyTexture(fireballBonusTexture);
 		SDL_DestroyTexture(doubleTileTexture);
 		SDL_DestroyTexture(resizeTileBonusTexture);
 		SDL_DestroyTexture(magnetBonusTexture);
@@ -293,12 +296,18 @@ void showActivatedBonuses(bool *isTakedBonus, SDL_Rect **bonusImagesRects, SDL_R
 		if (isTakedBonus[i]) {
 			bonusImagesRects[i]->x = 10;
 			bonusImagesRects[i]->x += activeCount*90;
-			if (i > 0) {
-				bonusTimes[i-1]->x = 10;
-				bonusTimes[i-1]->x += activeCount*90;
+			if (i >= 1) {
+				bonusTimes[i-1]->x = bonusImagesRects[i]->x;
 			}
 			activeCount++;
 		}
+		if (!isTakedBonus[i]) {
+			bonusImagesRects[i]->x = -100;
+			if (i >= 1) {
+				bonusTimes[i-1]->x = bonusImagesRects[i]->x;
+			}
+		}
+			
 	}	
 
 }
