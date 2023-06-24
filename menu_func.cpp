@@ -152,8 +152,7 @@ int check_level_progress(bool isSavedSlot) {
 
 	int levelProgress = 0;
 
-	if (isSavedSlot)
-		ft = fopen("level_progress.bin", "rb");
+	if (isSavedSlot) ft = fopen("level_progress.bin", "rb");
 	else ft = fopen("level_slot.bin", "rb");
 	fread(&levelProgress, sizeof(int), 1, ft);
 	fclose(ft);
@@ -357,6 +356,110 @@ int custom_level_menu(SDL_Renderer* ren) {
 	}
 
 }
+
+/*
+void create_custom_level(SDL_Renderer *ren) {
+
+	SDL_Event ev;
+
+	SDL_PollEvent(&ev);
+
+	SDL_Rect cursorRect{10, 10, 95, 30};
+
+	SDL_Rect mapRect[RECTS_AMOUNT];
+
+	int mapMask[RECTS_AMOUNT] {0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	int typeMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	bool isRunning = true;	
+	int rows = 1;
+	int cols = 1;
+	int rectId = 0;
+	int *colorMaskLink = nullptr;
+
+
+	bool isShift;
+	bool isPressedT;
+	bool isPressedB;
+	bool isPressedE;
+	bool isPressedU;
+
+	while (isRunning) {
+
+		isShift = false;
+		isPressedT = false;
+		isPressedB = false;
+		isPressedE = false;
+		isPressedU = false;
+
+		SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+		SDL_RenderClear(ren);
+		
+		while(SDL_PollEvent(&ev) != 0){
+			switch (ev.type) {
+				case SDL_QUIT:
+					isRunning = false;
+					break;
+
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_W: if (cursorRect.y-32>=10) { cursorRect.y-=32;  rows--; } break;
+						case SDL_SCANCODE_S: if (cursorRect.y+32<=160) { cursorRect.y+=32; rows++; } break;
+						case SDL_SCANCODE_A: if (cursorRect.x-97>=10) { cursorRect.x-=97; cols--; } break;
+						case SDL_SCANCODE_D: if (cursorRect.x+97<=873) { cursorRect.x+=97; cols++; } break;
+						case SDL_SCANCODE_T: isPressedT = true; break;
+						case SDL_SCANCODE_B: isPressedB = true; break;
+						case SDL_SCANCODE_E: isPressedE = true; break;
+						case SDL_SCANCODE_U: isPressedU = true; break;
+						case SDL_SCANCODE_LSHIFT: isShift = true; break;
+						case SDL_SCANCODE_ESCAPE: isRunning = false; break;
+					}
+					break;
+			}
+		}	
+
+		rectId = rows*9+cols;
+
+		if (isPressedE && !isShift)
+			mapMask[rectId] = 1;
+		if (isPressedE && isShift)
+			mapMask[rectId] = 0;
+		if (isPressedT && !isShift)
+			typeMask[rectId] += 1;
+		if (isPressedT && isShift)
+			typeMask[rectId] -= 1;
+		if (isPressedB && !isShift)
+			[rectId] += 1;
+		if (isPressedB && isShift)
+		
+		if (isPressedU)
+
+		SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+		SDL_RenderDrawRect(ren, &cursorRect);
+			
+		SDL_RenderPresent(ren);	
+			
+	}
+
+
+
+
+}*/
 
 int escape_menu(SDL_Renderer* ren) {
 

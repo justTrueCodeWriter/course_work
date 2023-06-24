@@ -28,7 +28,7 @@ void draw_map(SDL_Renderer* ren, int *level, int *colorMask, int *bonusMask) {
 		for (int i = 0; i < RECTS_COLS; i++) {
 			if (level[maskIndex] != 0) {
 				Map.rects[rectCount].x = 40+97*i;
-				Map.rects[rectCount].y = 60+32*j;
+				Map.rects[rectCount].y = 80+32*j;
 				Map.rects[rectCount].w = 95;
 				Map.rects[rectCount].h = 30;
 				Map.colorMask[rectCount] = colorMask[rectCount];
@@ -68,7 +68,7 @@ int level1_map_mask(SDL_Renderer* ren) {
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
-								0, 1, 0, 5, 0, 2, 0, 0, 4	
+								0, 1, 3, 5, 0, 2, 0, 0, 4	
 								};
 
 	draw_map(ren, level, colorMask, bonusMask);
@@ -94,7 +94,7 @@ int level2_map_mask(SDL_Renderer* ren) {
 
 	int bonusMask[RECTS_AMOUNT]{0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
-								0, 0, 0, 0, 0, 0, 0, 0, 0,
+								0, 0, 3, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 0, 0, 0, 0, 0,
 								0, 0, 0, 0, 1, 0, 0, 0, 0	
 								};
@@ -132,6 +132,7 @@ int level3_map_mask(SDL_Renderer* ren) {
 	return 3;
 
 }
+
 
 void create_custom_level() {
 

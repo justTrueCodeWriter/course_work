@@ -104,6 +104,9 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 
 	UsrTile.width = 150;
 
+	UsrTileClone.x = -300;
+	UsrTileClone.y = -20;
+
 	SDL_Event ev;
 
 	SDL_PollEvent(&ev);
@@ -202,12 +205,16 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 				!(isKeyPressed[RIGHT]||isKeyPressed[D])) {
 			if (UsrTile.x > 0)
 				UsrTile.x-=1.5*dt;
+			
 		}
 		if ((isKeyPressed[RIGHT]||isKeyPressed[D]) && 
 				!(isKeyPressed[LEFT]||isKeyPressed[A])) {
 			if (UsrTile.x < WIDTH-UsrTile.width)
 				UsrTile.x+=1.5*dt;
 		}
+
+		if (isTakedBonus[DOUBLE_TILE_BONUS])
+				UsrTileClone.x = UsrTile.x;
 
 		if (Ball.y>=HEIGHT) {
 			isRunning=false;
@@ -229,10 +236,10 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 			levelTime += dt;
 			ballRect.x = Ball.x-4;
 			ballRect.y = Ball.y-4;
-			ball_movements(ren, UsrTile, Map, dt, dx, dy, alpha, WIDTH, isBallLaunched, isFirstLaunch, isTakedBonus);
+			ball_movements(ren, UsrTile, UsrTileClone, Map, dt, dx, dy, alpha, WIDTH, isBallLaunched, isFirstLaunch, isTakedBonus);
 		}
 
-		checkBonusDeactivate(isTakedBonus, UsrTile);
+		checkBonusDeactivate(isTakedBonus, UsrTile, UsrTileClone);
 		showActivatedBonuses(isTakedBonus, bonusImagesRects, bonusTimes);
 
 		level(ren);
@@ -274,7 +281,7 @@ void game_cycle(SDL_Renderer* ren, int levelNumber) {
 		SDL_DestroyTexture(stringLevelTimeTexture);
 
 		SDL_DestroyTexture(fireballBonusTexture);
-		SDL_DestroyTexture(doubleTileTexture);
+		SDL_DestroyTexture(doubleTileBonusTexture);
 		SDL_DestroyTexture(resizeTileBonusTexture);
 		SDL_DestroyTexture(magnetBonusTexture);
 	}

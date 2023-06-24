@@ -19,6 +19,6 @@ struct ball_parameters {
 
 };
 
-void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile);
+void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile, usr_tile_parameters& UsrTileClone);
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int width, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus);
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, usr_tile_parameters& UsrTileClone, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int width, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus);

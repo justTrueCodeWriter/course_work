@@ -15,19 +15,6 @@ void draw_ball(SDL_Renderer* ren) {
 
 	SDL_RenderFillRectF(ren, &rect);
 
-	/*
-	for (int w = 0; w < Ball.radius * 2; w++)
-	{
-		for (int h = 0; h < Ball.radius * 2; h++)
-			{
-			int dx = Ball.radius - w; 
-			int dy = Ball.radius - h; 
-			if ((dx*dx + dy*dy) <= (Ball.radius * Ball.radius))
-			{
-				SDL_RenderDrawPoint(ren, Ball.x + dx, Ball.y + dy);
-			}
-		}
-	}*/
 
 }
 
@@ -45,12 +32,12 @@ void fireball_hit(usr_tile_parameters &UsrTile, map_parameters &Map, int rectToD
 
 }
 
-void bonus_activate(usr_tile_parameters &UsrTile, map_parameters &Map, bool *isTakedBonus, int rectToDelete) {
+void bonus_activate(usr_tile_parameters &UsrTile, usr_tile_parameters& UsrTileClone, map_parameters &Map, bool *isTakedBonus, int rectToDelete) {
 
 	switch (Map.bonusMask[rectToDelete]) {
 		case 1: isTakedBonus[CORE_BONUS] = true; Ball.core = 5; break;
 		case 2: isTakedBonus[FIREBALL_BONUS] = true; Ball.fireball = 5; break;
-		case 3: isTakedBonus[DOUBLE_TILE_BONUS] = true; UsrTile.doubleTile = 5; break;
+		case 3: isTakedBonus[DOUBLE_TILE_BONUS] = true; UsrTile.doubleTile = 5; UsrTileClone.x = -100; UsrTileClone.y = 50; break;
 		case 4: isTakedBonus[RESIZE_TILE_BONUS] = true; UsrTile.width = 300.0; UsrTile.resizeTile = 5; break;
 		case 5: isTakedBonus[MAGNET_TILE_BONUS] = true; UsrTile.magnet = 5; break;
 	}
@@ -65,7 +52,7 @@ void bonusTimeDecrease(bool *isTakedBonus, usr_tile_parameters& UsrTile) {
 
 }
 
-void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile) {
+void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile, usr_tile_parameters& UsrTileClone) {
 	int bonusTimesCount[] = {Ball.fireball, UsrTile.doubleTile, UsrTile.resizeTile, UsrTile.magnet};	
 
 	for (int i = 0; i < 4; i++) {
@@ -75,9 +62,45 @@ void checkBonusDeactivate(bool *isTakedBonus, usr_tile_parameters& UsrTile) {
 
 	if (!isTakedBonus[RESIZE_TILE_BONUS])
 		UsrTile.width = 150;
+	if (!isTakedBonus[DOUBLE_TILE_BONUS])
+		UsrTileClone.x = -300;
 }
 
-void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int WIDTH, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus) {
+
+void check_double_tiles_collision(usr_tile_parameters& UsrTile, float &dx, float &dy, float &alpha, bool &isBallLaunched, bool *isTakedBonus, bool isTileClone) {
+
+	if (check_tile_collision(UsrTile)&& isTakedBonus[MAGNET_TILE_BONUS]) {
+		if (isBallLaunched) Ball.xPositionOnTile = Ball.x-UsrTile.x;
+		isBallLaunched = false;
+		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) {
+			dx = abs(dx); 
+			alpha = Ball.x-(UsrTile.x);
+		}
+		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
+			dx = -abs(dx);
+			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
+		}
+		if (isTileClone) dy = abs(dy);
+		else dy = -abs(dy);
+	}
+		
+
+	else if (check_tile_collision(UsrTile)&& dy > 0) {
+		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) { 
+			dx = abs(dx);
+			alpha = Ball.x-(UsrTile.x);
+		}
+		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
+			dx = -abs(dx);
+			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
+		}
+		if (isTileClone) dy = abs(dy);
+		else dy = -abs(dy);
+	}
+
+}
+
+void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, usr_tile_parameters& UsrTileClone, map_parameters& Map, int dt, float &dx, float &dy, float &alpha, int WIDTH, bool &isBallLaunched, bool &isFirstLaunch, bool *isTakedBonus) {
 
 	draw_ball(ren);	
 
@@ -103,33 +126,9 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 	if (Ball.y<0)
 		dy = abs(dy);
 
-
-	if (check_tile_collision(UsrTile) && isTakedBonus[MAGNET_TILE_BONUS]) {
-		if (isBallLaunched) Ball.xPositionOnTile = Ball.x-UsrTile.x;
-		isBallLaunched = false;
-		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) {
-			dx = abs(dx); 
-			alpha = Ball.x-(UsrTile.x);
-		}
-		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
-			dx = -abs(dx);
-			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
-		}
-		dy = -abs(dy);
-	}
-		
-
-	else if (check_tile_collision(UsrTile) && dy > 0) {
-		if (Ball.x+Ball.radius/2.0 > UsrTile.x+UsrTile.width/2) { 
-			dx = abs(dx);
-			alpha = Ball.x-(UsrTile.x);
-		}
-		else if (Ball.x+Ball.radius/2.0 < UsrTile.x+UsrTile.width/2) {
-			dx = -abs(dx);
-			alpha = (UsrTile.x+UsrTile.width)-(Ball.x+Ball.radius);
-		}
-		dy = -abs(dy);
-	}
+	check_double_tiles_collision(UsrTile, dx, dy, alpha, isBallLaunched, isTakedBonus, false);
+	check_double_tiles_collision(UsrTileClone, dx, dy, alpha, isBallLaunched, isTakedBonus, true);
+	
 
 	int rectToDelete=-1;
 	check_map_tiles_collision(Map.rects, dx, dy, rectToDelete);
@@ -145,6 +144,7 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 					}
 					break;
 			case 2: if (isTakedBonus[CORE_BONUS]) {
+						bonusTimeDecrease(isTakedBonus, UsrTile);
 						Map.rects[rectToDelete].x=-WIDTH;
 						UsrTile.score+=UsrTile.multiplier+5;
 					}
@@ -159,7 +159,7 @@ void ball_movements(SDL_Renderer* ren, usr_tile_parameters& UsrTile, map_paramet
 					break;
 		}
 
-		bonus_activate(UsrTile, Map, isTakedBonus, rectToDelete);
+		bonus_activate(UsrTile, UsrTileClone, Map, isTakedBonus, rectToDelete);
 		
 	}
 
@@ -195,6 +195,12 @@ bool check_tile_collision(usr_tile_parameters& UsrTile)
 	}
 
 	return true;
+}
+
+void save_custom_level() {
+
+
+
 }
 
 void check_map_tiles_collision(SDL_Rect *rect, float &dx, float &dy, int &rectToDelete) {
