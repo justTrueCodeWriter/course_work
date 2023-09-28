@@ -1,12 +1,9 @@
-# Arkanoid-like game
-
 ## DESCRIPTION:
-Arkanoid-like game with RPG elements.
+Arkanoid game.
 
 ## TECH STACK:
 - C++
 - SDL2
-
 
 ## LIBS:
 - SDL2
@@ -14,24 +11,17 @@ Arkanoid-like game with RPG elements.
 
 ## TODO:
 - [x] Simple movements
-- [ ] Collision and physics for ball
-- [ ] Tile distraction
-- [ ] Buffs in tiles
-- [ ] Boss fight
-- [ ] Boss rules
+- [x] Collision and physics for ball
+- [x] Tile distraction
+- [x] Buffs in tiles
 
 ## Buffs:
-- [ ] double ball
-- [ ] fireball
-- [ ] shadow clonning
-- [ ] sticky player tile
-- [ ] miniball
-- [ ] slow ball
-- [ ] fast ball
-- [ ] extra life
+- [x] fireball
+- [x] double tile
+- [x] magnet tile
+- [x] core ball
 
 ## MENU:
-- [ ] Play
-- [ ] Leaderboard
-- [ ] Description
-- [ ] Quit
+- [x] Play
+- [x] Description
+- [x] Quit
